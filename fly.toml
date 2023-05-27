@@ -1,0 +1,47 @@
+# fly.toml app configuration file generated for jww-bluesky-feeds on 2023-05-26T13:17:17-06:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "jww-bluesky-feeds"
+primary_region = "den"
+kill_signal = "SIGINT"
+kill_timeout = 5
+
+[env]
+  PORT = "3000"
+  NODE_ENV="production"
+  FEEDGEN_PORT="3000"
+  FEEDGEN_LISTENHOST="localhost"
+  FEEDGEN_SQLITE_LOCATION="/litefs/db.sqlite"
+  FEEDGEN_SUBSCRIPTION_ENDPOINT="wss://bsky.social"
+  FEEDGEN_HOSTNAME="skylines.jww.wtf"
+
+[mounts]
+  source = "litefs"
+  destination = "/var/lib/litefs"
+
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 8080
+  processes = ["app"]
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 60
+    soft_limit = 45
+
+  [[services.tcp_checks]]
+    interval = "15s"
+    timeout = "2s"
+    grace_period = "15s"
+    restart_limit = 5
