@@ -6,9 +6,9 @@ export const uri =
   'at://did:plc:ovd4yosoobsdxwmay46wzhwx/app.bsky.feed.generator/must-see'
 
 const MUST_SEE_ACCOUNTS = [
-  'did:plc:uashgn65n5z7aqwk5cbuba5c', // kredcarroll.bsky.london
+  'did:plc:zmjslothnwjtlsue36wznn77', // kredcarroll.bsky.london
   'did:plc:66elurdo7ngh7zfe4wrpjl7k', // rachelskirts.bsky.social
-  'did:plc:uashgn65n5z7aqwk5cbuba5c', // lepinski.bsky.social
+  'did:plc:2drlqjhjb3yq6efvddbiv72n', // lepinski.bsky.social
   'did:plc:nxvalqtnhkfhabdfqnafftee', // andersen.buzz
   'did:plc:ycwhasdjanzve7dvqf2ueeoe', // chrisrisner.com
   'did:plc:sefv7vq5yrt4t7fapgpao7kl', // pbur.bsky.social
