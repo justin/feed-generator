@@ -1,4 +1,6 @@
 import { Kysely, Migration, MigrationProvider } from 'kysely'
+import { seedFeed } from './seed'
+import { DatabaseSchema } from './schema'
 
 const migrations: Record<string, Migration> = {}
 
@@ -43,6 +45,14 @@ migrations['002'] = {
       .execute()
   },
   async down(db: Kysely<unknown>) {
-    await db.schema.alterTable('post').dropColumn('feed').execute()
+    await db.schema.alterTable('post').dropColumn('author').execute()
   },
+}
+
+migrations['003'] = {
+  async up(db: Kysely<DatabaseSchema>) {
+    console.log('Seeding feed')
+    await seedFeed(db)
+  },
+  async down(db: Kysely<unknown>) {},
 }
