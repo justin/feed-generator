@@ -1,9 +1,7 @@
 import { InvalidRequestError } from '@atproto/xrpc-server'
 import { QueryParams } from '../lexicon/types/app/bsky/feed/getFeedSkeleton'
 import { AppContext } from '../config'
-
-export const uri =
-  'at://did:plc:ovd4yosoobsdxwmay46wzhwx/app.bsky.feed.generator/aew'
+import { Feed } from './feed_type'
 
 const AEW_ACCOUNTS = [
   'did:plc:dsmuyt6h5emct7b42qkum5dv', // aew.bsky.social
@@ -13,7 +11,7 @@ const AEW_ACCOUNTS = [
   'did:plc:odbt6gx5okqfvdqcwf72htbl', // iamjericho.bsky.social
 ]
 
-export const handler = async (ctx: AppContext, params: QueryParams) => {
+const handler = async (ctx: AppContext, params: QueryParams) => {
   let builder = ctx.db
     .selectFrom('post')
     .selectAll()
@@ -50,3 +48,11 @@ export const handler = async (ctx: AppContext, params: QueryParams) => {
     feed,
   }
 }
+
+export const aew = new Feed(
+  'aew',
+  'All Elite Wrestling',
+  'Accounts associated with All Elite Wrestling (AEW).',
+  './public/images/all-elite-wrestling.jpg',
+  handler,
+)

@@ -1,9 +1,7 @@
 import { InvalidRequestError } from '@atproto/xrpc-server'
 import { QueryParams } from '../lexicon/types/app/bsky/feed/getFeedSkeleton'
 import { AppContext } from '../config'
-
-export const uri =
-  'at://did:plc:ovd4yosoobsdxwmay46wzhwx/app.bsky.feed.generator/must-see'
+import { Feed } from './feed_type'
 
 const MUST_SEE_ACCOUNTS = [
   'did:plc:zmjslothnwjtlsue36wznn77', // kredcarroll.bsky.london
@@ -17,7 +15,7 @@ const MUST_SEE_ACCOUNTS = [
   'did:plc:64ryvurqwzr6ljn5v7lwninh', // filmgirl.bsky.social
 ]
 
-export const handler = async (ctx: AppContext, params: QueryParams) => {
+const handler = async (ctx: AppContext, params: QueryParams) => {
   let builder = ctx.db
     .selectFrom('post')
     .selectAll()
@@ -54,3 +52,11 @@ export const handler = async (ctx: AppContext, params: QueryParams) => {
     feed,
   }
 }
+
+export const mustSee = new Feed(
+  'must-see',
+  'Must See',
+  'A feed of my must see skeeters.',
+  './public/images/must-see.png',
+  handler,
+)
