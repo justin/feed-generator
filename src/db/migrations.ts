@@ -56,3 +56,17 @@ migrations['003'] = {
   },
   async down(db: Kysely<unknown>) {},
 }
+
+migrations['004'] = {
+  async up(db: Kysely<DatabaseSchema>) {
+    console.log('Adding index on post.author')
+    await db.schema
+      .createIndex('idx_post_author')
+      .on('post')
+      .column('author')
+      .execute()
+  },
+  async down(db: Kysely<unknown>) {
+    await db.schema.dropIndex('idx_post_author').execute()
+  },
+}
