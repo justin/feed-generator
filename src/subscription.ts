@@ -3,18 +3,18 @@ import {
   isCommit,
 } from './lexicon/types/com/atproto/sync/subscribeRepos'
 import { FirehoseSubscriptionBase, getOpsByType } from './util/subscription'
+import winston from 'winston'
 
-const dids = [
-  'did:plc:uashgn65n5z7aqwk5cbuba5c', // kredcarroll.bsky.london
-  'did:plc:66elurdo7ngh7zfe4wrpjl7k', // rachelskirts.bsky.social
-  'did:plc:uashgn65n5z7aqwk5cbuba5c', // lepinski.bsky.social
-  'did:plc:nxvalqtnhkfhabdfqnafftee', // andersen.buzz
-  'did:plc:ycwhasdjanzve7dvqf2ueeoe', // chrisrisner.com
-  'did:plc:sefv7vq5yrt4t7fapgpao7kl', // pbur.bsky.social
-  'did:plc:e3cyxeqboiqsybc3u6wvzysz', // edsbs.bsky.social,
-  'did:plc:2v2yp5fsovvxa637d6upiz3d', // jb.wtf
-  'did:plc:64ryvurqwzr6ljn5v7lwninh', // filmgirl.bsky.social
-]
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  defaultMeta: { service: 'firehose-ingestion' },
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.simple(),
+    }),
+  ],
+})
 
 export class FirehoseSubscription extends FirehoseSubscriptionBase {
   async handleEvent(evt: RepoEvent) {
@@ -34,6 +34,7 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
     })
 
     if (postsToDelete.length > 0) {
+      logger.info(`Deleting ${postsToDelete.length} posts`)
       await this.db
         .deleteFrom('post')
         .where('uri', 'in', postsToDelete)

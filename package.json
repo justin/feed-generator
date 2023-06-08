@@ -21,8 +21,9 @@
     "better-sqlite3": "^8.3.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "kysely": "^0.25.0",
     "multiformats": "^9.9.0",
-    "kysely": "^0.25.0"
+    "winston": "^3.9.0"
   },
   "devDependencies": {
     "@flydotio/dockerfile": "^0.2.7",

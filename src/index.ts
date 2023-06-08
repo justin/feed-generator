@@ -1,5 +1,17 @@
 import dotenv from 'dotenv'
 import FeedGenerator from './server'
+import winston from 'winston'
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  defaultMeta: { service: 'feed-generator' },
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.simple(),
+    }),
+  ],
+})
 
 const run = async () => {
   dotenv.config()
@@ -19,7 +31,8 @@ const run = async () => {
     serviceDid,
   })
   await server.start()
-  console.log(
+  logger.log(
+    'info',
     `🤖 running feed generator at http://${server.cfg.listenhost}:${server.cfg.port}`,
   )
 }

@@ -2,6 +2,18 @@ import { InvalidRequestError } from '@atproto/xrpc-server'
 import { QueryParams } from '../lexicon/types/app/bsky/feed/getFeedSkeleton'
 import { AppContext } from '../config'
 import { Feed } from './feed_type'
+import winston from 'winston'
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  defaultMeta: { service: 'aew' },
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.simple(),
+    }),
+  ],
+})
 
 const AEW_ACCOUNTS = [
   'did:plc:dsmuyt6h5emct7b42qkum5dv', // aew.bsky.social
@@ -37,6 +49,7 @@ const handler = async (ctx: AppContext, params: QueryParams) => {
     post: row.uri,
   }))
 
+  logger.info(`🤖 aew feed generated ${feed.length} items`)
   let cursor: string | undefined
   const last = res.at(-1)
   if (last) {

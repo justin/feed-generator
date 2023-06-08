@@ -2,6 +2,18 @@ import * as BlueSky from '@atproto/api'
 import { AtpAgent } from '@atproto/api'
 import { Database } from '../db'
 import { Post } from './schema'
+import winston from 'winston'
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  defaultMeta: { service: 'database' },
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.simple(),
+    }),
+  ],
+})
 
 export const seedFeed = async (db: Database) => {
   const handle = process.env.BSKY_USERNAME!
@@ -68,9 +80,9 @@ export const seedFeed = async (db: Database) => {
           .execute()
       }
 
-      console.log(`Seeded ${postsToCreate.length} posts for ${profile.did}`)
+      logger.info(`Seeded ${postsToCreate.length} posts for ${profile.did}`)
     }
   } catch (err) {
-    console.log(err)
+    logger.error(`Error seeding database: ${err.message}. ${err}`)
   }
 }

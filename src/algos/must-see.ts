@@ -2,7 +2,18 @@ import { InvalidRequestError } from '@atproto/xrpc-server'
 import { QueryParams } from '../lexicon/types/app/bsky/feed/getFeedSkeleton'
 import { AppContext } from '../config'
 import { Feed } from './feed_type'
+import winston from 'winston'
 
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  defaultMeta: { service: 'must-see' },
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.simple(),
+    }),
+  ],
+})
 const MUST_SEE_ACCOUNTS = [
   'did:plc:zmjslothnwjtlsue36wznn77', // kredcarroll.bsky.london
   'did:plc:66elurdo7ngh7zfe4wrpjl7k', // rachelskirts.bsky.social
@@ -41,6 +52,7 @@ const handler = async (ctx: AppContext, params: QueryParams) => {
     post: row.uri,
   }))
 
+  logger.info(`🤖 must-see feed generated ${feed.length} items`)
   let cursor: string | undefined
   const last = res.at(-1)
   if (last) {
