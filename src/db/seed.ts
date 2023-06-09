@@ -6,7 +6,6 @@ import winston from 'winston'
 
 const logger = winston.createLogger({
   level: 'info',
-  format: winston.format.json(),
   defaultMeta: { service: 'database' },
   transports: [
     new winston.transports.Console({
@@ -48,8 +47,7 @@ export const seedFeed = async (db: Database) => {
       throw new Error('Failed to get profiles')
     }
 
-    const profiles = response.data
-      .profiles as BlueSky.AppBskyActorDefs.ProfileViewDetailed[]
+    const profiles = response.data.profiles as BlueSky.AppBskyActorDefs.ProfileViewDetailed[]
 
     for (const profile of profiles) {
       const feed = await agent.api.app.bsky.feed.getAuthorFeed({

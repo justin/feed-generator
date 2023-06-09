@@ -7,7 +7,6 @@ import winston from 'winston'
 
 const logger = winston.createLogger({
   level: 'info',
-  format: winston.format.json(),
   defaultMeta: { service: 'firehose-ingestion' },
   transports: [
     new winston.transports.Console({
@@ -35,10 +34,7 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
 
     if (postsToDelete.length > 0) {
       logger.info(`Deleting ${postsToDelete.length} posts`)
-      await this.db
-        .deleteFrom('post')
-        .where('uri', 'in', postsToDelete)
-        .execute()
+      await this.db.deleteFrom('post').where('uri', 'in', postsToDelete).execute()
     }
     if (postsToCreate.length > 0) {
       await this.db
