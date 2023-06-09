@@ -18,12 +18,7 @@ export class FeedGenerator {
   public firehose: FirehoseSubscription
   public cfg: Config
 
-  constructor(
-    app: express.Application,
-    db: Database,
-    firehose: FirehoseSubscription,
-    cfg: Config,
-  ) {
+  constructor(app: express.Application, db: Database, firehose: FirehoseSubscription, cfg: Config) {
     this.app = app
     this.db = db
     this.firehose = firehose
@@ -36,10 +31,7 @@ export class FeedGenerator {
     const firehose = new FirehoseSubscription(db, cfg.subscriptionEndpoint)
 
     const didCache = new MemoryCache()
-    const didResolver = new DidResolver(
-      { plcUrl: 'https://plc.directory' },
-      didCache,
-    )
+    const didResolver = new DidResolver({ plcUrl: 'https://plc.directory' }, didCache)
 
     const server = createServer({
       validateResponse: true,
@@ -64,6 +56,8 @@ export class FeedGenerator {
 
   async start(): Promise<http.Server> {
     await migrateToLatest(this.db)
+    await seedFeed(this.db)
+
     this.firehose.run()
     this.server = this.app.listen(this.cfg.port, this.cfg.listenhost)
     await events.once(this.server, 'listening')
