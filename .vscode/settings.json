@@ -1,0 +1,36 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    ".env": ".env, .env.example",
+    ".gitignore": ".gitignore, .dockerignore",
+    "tsconfig.json": "tsconfig.json, tsconfig.base.json, tsconfig.test.json"
+  },
+  "files.exclude": {
+    "**/**.js": {
+      "when": "$(basename).tsx"
+    },
+    // Hide derived JavaScript files
+    "**/*.js": {
+      "when": "$(basename).ts"
+    },
+    "**/.DS_Store": true,
+    "**/.git": true,
+    "**/.hg": true,
+    "**/.svn": true,
+    "**/coverage": true,
+    "**/CVS": true,
+    "**/dist": true,
+    "**/node_modules": true,
+    "**/Thumbs.db": true,
+    "**/tsconfig.tsbuildinfo": true
+  },
+  "prettier.configPath": "./.prettierrc",
+  "prettier.ignorePath": "./.prettierignore",
+  "prettier.prettierPath": "./node_modules/prettier",
+  "typescript.implementationsCodeLens.enabled": true,
+  "typescript.referencesCodeLens.enabled": true,
+  "typescript.tsdk": "./node_modules/typescript/lib"
+}

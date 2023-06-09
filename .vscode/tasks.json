@@ -1,0 +1,46 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build TypeScript Files",
+      "type": "typescript",
+      "tsconfig": "tsconfig.json",
+      "problemMatcher": ["$tsc"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Watch TypeScript Files",
+      "command": "npm run watch",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "type": "shell",
+      "isBackground": true,
+      "problemMatcher": ["$tsc-watch"],
+      "presentation": {
+        "reveal": "silent",
+        "clear": true,
+        "close": true
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    },
+    {
+      "label": "Clean Workspace",
+      "command": "npm run clean",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "type": "shell",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
