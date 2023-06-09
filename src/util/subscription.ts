@@ -12,6 +12,17 @@ import {
   isCommit,
 } from '../lexicon/types/com/atproto/sync/subscribeRepos'
 import { Database } from '../db'
+import winston from 'winston'
+
+const logger = winston.createLogger({
+  level: 'info',
+  defaultMeta: { service: 'firehose-ingestion' },
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.simple(),
+    }),
+  ],
+})
 
 export abstract class FirehoseSubscriptionBase {
   public sub: Subscription<RepoEvent>
@@ -23,12 +34,9 @@ export abstract class FirehoseSubscriptionBase {
       getParams: () => this.getCursor(),
       validate: (value: unknown) => {
         try {
-          return lexicons.assertValidXrpcMessage<RepoEvent>(
-            ids.ComAtprotoSyncSubscribeRepos,
-            value,
-          )
+          return lexicons.assertValidXrpcMessage<RepoEvent>(ids.ComAtprotoSyncSubscribeRepos, value)
         } catch (err) {
-          console.error('repo subscription skipped invalid message', err)
+          logger.error('repo subscription skipped invalid message', err)
         }
       },
     })
@@ -41,24 +49,34 @@ export abstract class FirehoseSubscriptionBase {
       try {
         await this.handleEvent(evt)
       } catch (err) {
-        console.error('repo subscription could not handle message', err)
+        logger.error('repo subscription could not handle message', err)
       }
+
       // update stored cursor every 20 events or so
       if (isCommit(evt) && evt.seq % 20 === 0) {
+        logger.info(`Updating cursor for ${this.service} to ${evt.seq}`)
+
         await this.updateCursor(evt.seq)
       }
     }
   }
 
   async updateCursor(cursor: number) {
-    await this.db
+    const result = await this.db
       .updateTable('sub_state')
       .set({ cursor })
       .where('service', '=', this.service)
-      .execute()
+      .executeTakeFirst()
+
+    if (Number(result.numUpdatedRows) === 0) {
+      logger.info(`Inserting cursor for ${this.service}`)
+      await this.db.insertInto('sub_state').values({ service: this.service, cursor }).execute()
+    }
   }
 
   async getCursor(): Promise<{ cursor?: number }> {
+    logger.info(`Getting cursor for ${this.service}`)
+
     const res = await this.db
       .selectFrom('sub_state')
       .selectAll()
