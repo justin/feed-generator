@@ -25,6 +25,7 @@ const MUST_SEE_ACCOUNTS = [
   'did:plc:64ryvurqwzr6ljn5v7lwninh', // filmgirl.bsky.social
   'did:plc:mmaqcbxi5cfco4o476lm7ah5', // tdf.bsky.social
   'did:plc:izuwp3undw3ftet5lxeu4nbs', // drance.bsky.social
+  'did:plc:zlzbhkpioummfuyfhbzrluuz', // marion.bsky.social
 ]
 
 const handler = async (ctx: AppContext, params: QueryParams) => {
