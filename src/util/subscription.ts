@@ -44,23 +44,24 @@ export abstract class FirehoseSubscriptionBase {
 
   abstract handleEvent(evt: RepoEvent): Promise<void>
 
-  async run() {
-    for await (const evt of this.sub) {
-      try {
-        await this.handleEvent(evt)
-      } catch (err) {
-        logger.error('repo subscription could not handle message', err)
+  async run(subscriptionReconnectDelay: number) {
+    try {
+      for await (const evt of this.sub) {
+        try {
+          await this.handleEvent(evt)
+        } catch (err) {
+          console.error('repo subscription could not handle message', err)
+        }
+        // update stored cursor every 20 events or so
+        if (isCommit(evt) && evt.seq % 20 === 0) {
+          await this.updateCursor(evt.seq)
+        }
       }
-
-      // update stored cursor every 20 events or so
-      if (isCommit(evt) && evt.seq % 20 === 0) {
-        logger.info(`Updating cursor for ${this.service} to ${evt.seq}`)
-
-        await this.updateCursor(evt.seq)
-      }
+    } catch (err) {
+      console.error('repo subscription errored', err)
+      setTimeout(() => this.run(subscriptionReconnectDelay), subscriptionReconnectDelay)
     }
   }
-
   async updateCursor(cursor: number) {
     const result = await this.db
       .updateTable('sub_state')

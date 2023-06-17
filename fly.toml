@@ -17,6 +17,7 @@ kill_timeout = 5
   FEEDGEN_SUBSCRIPTION_ENDPOINT="wss://bsky.social"
   FEEDGEN_HOSTNAME="skylines.jww.wtf"
   FEEDGEN_PUBLISHER_DID="did:plc:ovd4yosoobsdxwmay46wzhwx"
+  FEEDGEN_SUBSCRIPTION_RECONNECT_DELAY="3000"
 
 [mounts]
   source = "litefs"
