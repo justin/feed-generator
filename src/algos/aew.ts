@@ -14,7 +14,7 @@ const logger = winston.createLogger({
   ],
 })
 
-const AEW_ACCOUNTS = [
+export const AEW_ACCOUNTS = [
   'did:plc:dsmuyt6h5emct7b42qkum5dv', // aew.bsky.social
   'did:plc:kdugmwhfecul5277pxqwdxsa', // rjcity.bsky.social
   'did:plc:e2u3jd45hqntyueuucb42g74', // tonykhan.bsky.social

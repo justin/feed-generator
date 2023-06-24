@@ -3,6 +3,8 @@ import { AtpAgent } from '@atproto/api'
 import { Database } from '../db'
 import { Post } from './schema'
 import winston from 'winston'
+import { MUST_SEE_ACCOUNTS } from '../algos/must-see'
+import { AEW_ACCOUNTS } from '../algos/aew'
 
 const logger = winston.createLogger({
   level: 'info',
@@ -23,25 +25,7 @@ export const seedFeed = async (db: Database) => {
 
   try {
     const response = await agent.api.app.bsky.actor.getProfiles({
-      actors: [
-        'did:plc:zmjslothnwjtlsue36wznn77', // kredcarroll.bsky.london
-        'did:plc:66elurdo7ngh7zfe4wrpjl7k', // rachelskirts.bsky.social
-        'did:plc:2drlqjhjb3yq6efvddbiv72n', // lepinski.bsky.social
-        'did:plc:nxvalqtnhkfhabdfqnafftee', // andersen.buzz
-        'did:plc:ycwhasdjanzve7dvqf2ueeoe', // chrisrisner.com
-        'did:plc:sefv7vq5yrt4t7fapgpao7kl', // pbur.bsky.social
-        'did:plc:e3cyxeqboiqsybc3u6wvzysz', // edsbs.bsky.social,
-        'did:plc:2v2yp5fsovvxa637d6upiz3d', // jb.wtf
-        'did:plc:64ryvurqwzr6ljn5v7lwninh', // filmgirl.bsky.social
-        'did:plc:mmaqcbxi5cfco4o476lm7ah5', // tdf.bsky.social
-
-        // AEW
-        'did:plc:dsmuyt6h5emct7b42qkum5dv', // aew.bsky.social
-        'did:plc:kdugmwhfecul5277pxqwdxsa', // rjcity.bsky.social
-        'did:plc:e2u3jd45hqntyueuucb42g74', // tonykhan.bsky.social
-        'did:plc:khwlu6usc7lc2qzhdbvactg3', // willwashington.bsky.social
-        'did:plc:odbt6gx5okqfvdqcwf72htbl', // iamjericho.bsky.social
-      ],
+        actors: [...MUST_SEE_ACCOUNTS, ...AEW_ACCOUNTS],
     })
 
     if (!response.success) {

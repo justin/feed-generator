@@ -13,7 +13,8 @@ const logger = winston.createLogger({
     }),
   ],
 })
-const MUST_SEE_ACCOUNTS = [
+
+export const MUST_SEE_ACCOUNTS = [
   'did:plc:zmjslothnwjtlsue36wznn77', // kredcarroll.bsky.london
   'did:plc:66elurdo7ngh7zfe4wrpjl7k', // rachelskirts.bsky.social
   'did:plc:2drlqjhjb3yq6efvddbiv72n', // lepinski.bsky.social
@@ -26,6 +27,8 @@ const MUST_SEE_ACCOUNTS = [
   'did:plc:mmaqcbxi5cfco4o476lm7ah5', // tdf.bsky.social
   'did:plc:izuwp3undw3ftet5lxeu4nbs', // drance.bsky.social
   'did:plc:zlzbhkpioummfuyfhbzrluuz', // marion.bsky.social
+  'did:plc:o7yjz7petq2ambrq6naq3lda', // benr.eu
+  'did:plc:7zmcob5obvvbo35m624df26d', // tofias.bsky.social
 ]
 
 const handler = async (ctx: AppContext, params: QueryParams) => {
