@@ -76,13 +76,14 @@ export abstract class FirehoseSubscriptionBase {
   }
 
   async getCursor(): Promise<{ cursor?: number }> {
-    logger.info(`Getting cursor for ${this.service}`)
-
     const res = await this.db
       .selectFrom('sub_state')
       .selectAll()
       .where('service', '=', this.service)
       .executeTakeFirst()
+
+    logger.info(`Getting cursor for ${this.service}: ${res?.cursor}`)
+
     return res ? { cursor: res.cursor } : {}
   }
 }
