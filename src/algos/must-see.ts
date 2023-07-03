@@ -29,6 +29,8 @@ export const MUST_SEE_ACCOUNTS = [
   'did:plc:zlzbhkpioummfuyfhbzrluuz', // marion.bsky.social
   'did:plc:o7yjz7petq2ambrq6naq3lda', // benr.eu
   'did:plc:7zmcob5obvvbo35m624df26d', // tofias.bsky.social
+  'did:plc:do5bz2s7a6vnq3sequpqrrpv', // penguin.bsky.social
+  'did:plc:35rgq4cuuxr3dxzotcbmoq3p', // mogos.bsky.social
 ]
 
 const handler = async (ctx: AppContext, params: QueryParams) => {
