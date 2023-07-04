@@ -27,9 +27,6 @@
     "**/Thumbs.db": true,
     "**/tsconfig.tsbuildinfo": true
   },
-  "prettier.configPath": "./.prettierrc",
-  "prettier.ignorePath": "./.prettierignore",
-  "prettier.prettierPath": "./node_modules/prettier",
   "typescript.implementationsCodeLens.enabled": true,
   "typescript.referencesCodeLens.enabled": true,
   "typescript.tsdk": "./node_modules/typescript/lib"

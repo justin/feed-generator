@@ -13,3 +13,4 @@
 .env*
 .envrc
 .dockerignore
+Dockerfile

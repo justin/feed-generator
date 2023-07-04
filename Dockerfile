@@ -1,7 +1,7 @@
 # Fetch the LiteFS binary using a multi-stage build.
-FROM flyio/litefs:0.4 AS litefs
+FROM flyio/litefs:0.5 AS litefs
 
-FROM node:18-bullseye-slim as base
+FROM node:20-bookworm-slim as base
 
 RUN apt update
 RUN apt install -y ca-certificates fuse3

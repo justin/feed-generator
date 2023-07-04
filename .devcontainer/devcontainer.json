@@ -16,10 +16,7 @@
         "yoavbls.pretty-ts-errors",
         "dbaeumer.vscode-eslint",
         "ms-azuretools.vscode-docker"
-      ],
-      "settings": {
-        "terminal.integrated.shell.linux": "/bin/zsh"
-      }
+      ]
     },
     "codespaces": {
       "openFiles": ["src/index.ts"]
