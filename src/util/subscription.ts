@@ -50,7 +50,7 @@ export abstract class FirehoseSubscriptionBase {
         try {
           await this.handleEvent(evt)
         } catch (err) {
-          console.error('repo subscription could not handle message', err)
+          logger.error('repo subscription could not handle message', err)
         }
         // update stored cursor every 20 events or so
         if (isCommit(evt) && evt.seq % 20 === 0) {
@@ -58,7 +58,7 @@ export abstract class FirehoseSubscriptionBase {
         }
       }
     } catch (err) {
-      console.error('repo subscription errored', err)
+      logger.error('repo subscription errored', err)
       setTimeout(() => this.run(subscriptionReconnectDelay), subscriptionReconnectDelay)
     }
   }
