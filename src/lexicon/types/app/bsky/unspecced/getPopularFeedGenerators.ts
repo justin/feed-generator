@@ -7,7 +7,7 @@ import { lexicons } from '../../../../lexicons'
 import { isObj, hasProp } from '../../../../util'
 import { CID } from 'multiformats/cid'
 import { HandlerAuth } from '@atproto/xrpc-server'
-import * as AppBskyFeedDefs from './defs'
+import * as AppBskyFeedDefs from '../feed/defs'
 
 export interface QueryParams {
   limit: number
@@ -27,6 +27,7 @@ export type HandlerInput = undefined
 export interface HandlerSuccess {
   encoding: 'application/json'
   body: OutputSchema
+  headers?: { [key: string]: string }
 }
 
 export interface HandlerError {

@@ -4,6 +4,2895 @@
 import { LexiconDoc, Lexicons } from '@atproto/lexicon'
 
 export const schemaDict = {
+  AppBskyActorDefs: {
+    lexicon: 1,
+    id: 'app.bsky.actor.defs',
+    description: 'A reference to an actor in the network.',
+    defs: {
+      profileViewBasic: {
+        type: 'object',
+        required: ['did', 'handle'],
+        properties: {
+          did: {
+            type: 'string',
+            format: 'did',
+          },
+          handle: {
+            type: 'string',
+            format: 'handle',
+          },
+          displayName: {
+            type: 'string',
+            maxGraphemes: 64,
+            maxLength: 640,
+          },
+          avatar: {
+            type: 'string',
+          },
+          viewer: {
+            type: 'ref',
+            ref: 'lex:app.bsky.actor.defs#viewerState',
+          },
+          labels: {
+            type: 'array',
+            items: {
+              type: 'ref',
+              ref: 'lex:com.atproto.label.defs#label',
+            },
+          },
+        },
+      },
+      profileView: {
+        type: 'object',
+        required: ['did', 'handle'],
+        properties: {
+          did: {
+            type: 'string',
+            format: 'did',
+          },
+          handle: {
+            type: 'string',
+            format: 'handle',
+          },
+          displayName: {
+            type: 'string',
+            maxGraphemes: 64,
+            maxLength: 640,
+          },
+          description: {
+            type: 'string',
+            maxGraphemes: 256,
+            maxLength: 2560,
+          },
+          avatar: {
+            type: 'string',
+          },
+          indexedAt: {
+            type: 'string',
+            format: 'datetime',
+          },
+          viewer: {
+            type: 'ref',
+            ref: 'lex:app.bsky.actor.defs#viewerState',
+          },
+          labels: {
+            type: 'array',
+            items: {
+              type: 'ref',
+              ref: 'lex:com.atproto.label.defs#label',
+            },
+          },
+        },
+      },
+      profileViewDetailed: {
+        type: 'object',
+        required: ['did', 'handle'],
+        properties: {
+          did: {
+            type: 'string',
+            format: 'did',
+          },
+          handle: {
+            type: 'string',
+            format: 'handle',
+          },
+          displayName: {
+            type: 'string',
+            maxGraphemes: 64,
+            maxLength: 640,
+          },
+          description: {
+            type: 'string',
+            maxGraphemes: 256,
+            maxLength: 2560,
+          },
+          avatar: {
+            type: 'string',
+          },
+          banner: {
+            type: 'string',
+          },
+          followersCount: {
+            type: 'integer',
+          },
+          followsCount: {
+            type: 'integer',
+          },
+          postsCount: {
+            type: 'integer',
+          },
+          indexedAt: {
+            type: 'string',
+            format: 'datetime',
+          },
+          viewer: {
+            type: 'ref',
+            ref: 'lex:app.bsky.actor.defs#viewerState',
+          },
+          labels: {
+            type: 'array',
+            items: {
+              type: 'ref',
+              ref: 'lex:com.atproto.label.defs#label',
+            },
+          },
+        },
+      },
+      viewerState: {
+        type: 'object',
+        properties: {
+          muted: {
+            type: 'boolean',
+          },
+          mutedByList: {
+            type: 'ref',
+            ref: 'lex:app.bsky.graph.defs#listViewBasic',
+          },
+          blockedBy: {
+            type: 'boolean',
+          },
+          blocking: {
+            type: 'string',
+            format: 'at-uri',
+          },
+          following: {
+            type: 'string',
+            format: 'at-uri',
+          },
+          followedBy: {
+            type: 'string',
+            format: 'at-uri',
+          },
+        },
+      },
+      preferences: {
+        type: 'array',
+        items: {
+          type: 'union',
+          refs: [
+            'lex:app.bsky.actor.defs#adultContentPref',
+            'lex:app.bsky.actor.defs#contentLabelPref',
+            'lex:app.bsky.actor.defs#savedFeedsPref',
+          ],
+        },
+      },
+      adultContentPref: {
+        type: 'object',
+        required: ['enabled'],
+        properties: {
+          enabled: {
+            type: 'boolean',
+            default: false,
+          },
+        },
+      },
+      contentLabelPref: {
+        type: 'object',
+        required: ['label', 'visibility'],
+        properties: {
+          label: {
+            type: 'string',
+          },
+          visibility: {
+            type: 'string',
+            knownValues: ['show', 'warn', 'hide'],
+          },
+        },
+      },
+      savedFeedsPref: {
+        type: 'object',
+        required: ['pinned', 'saved'],
+        properties: {
+          pinned: {
+            type: 'array',
+            items: {
+              type: 'string',
+              format: 'at-uri',
+            },
+          },
+          saved: {
+            type: 'array',
+            items: {
+              type: 'string',
+              format: 'at-uri',
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyActorGetPreferences: {
+    lexicon: 1,
+    id: 'app.bsky.actor.getPreferences',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'Get private preferences attached to the account.',
+        parameters: {
+          type: 'params',
+          properties: {},
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['preferences'],
+            properties: {
+              preferences: {
+                type: 'ref',
+                ref: 'lex:app.bsky.actor.defs#preferences',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyActorGetProfile: {
+    lexicon: 1,
+    id: 'app.bsky.actor.getProfile',
+    defs: {
+      main: {
+        type: 'query',
+        parameters: {
+          type: 'params',
+          required: ['actor'],
+          properties: {
+            actor: {
+              type: 'string',
+              format: 'at-identifier',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'ref',
+            ref: 'lex:app.bsky.actor.defs#profileViewDetailed',
+          },
+        },
+      },
+    },
+  },
+  AppBskyActorGetProfiles: {
+    lexicon: 1,
+    id: 'app.bsky.actor.getProfiles',
+    defs: {
+      main: {
+        type: 'query',
+        parameters: {
+          type: 'params',
+          required: ['actors'],
+          properties: {
+            actors: {
+              type: 'array',
+              items: {
+                type: 'string',
+                format: 'at-identifier',
+              },
+              maxLength: 25,
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['profiles'],
+            properties: {
+              profiles: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.actor.defs#profileViewDetailed',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyActorGetSuggestions: {
+    lexicon: 1,
+    id: 'app.bsky.actor.getSuggestions',
+    defs: {
+      main: {
+        type: 'query',
+        description:
+          'Get a list of actors suggested for following. Used in discovery UIs.',
+        parameters: {
+          type: 'params',
+          properties: {
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['actors'],
+            properties: {
+              cursor: {
+                type: 'string',
+              },
+              actors: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.actor.defs#profileView',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyActorProfile: {
+    lexicon: 1,
+    id: 'app.bsky.actor.profile',
+    defs: {
+      main: {
+        type: 'record',
+        key: 'literal:self',
+        record: {
+          type: 'object',
+          properties: {
+            displayName: {
+              type: 'string',
+              maxGraphemes: 64,
+              maxLength: 640,
+            },
+            description: {
+              type: 'string',
+              maxGraphemes: 256,
+              maxLength: 2560,
+            },
+            avatar: {
+              type: 'blob',
+              accept: ['image/png', 'image/jpeg'],
+              maxSize: 1000000,
+            },
+            banner: {
+              type: 'blob',
+              accept: ['image/png', 'image/jpeg'],
+              maxSize: 1000000,
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyActorPutPreferences: {
+    lexicon: 1,
+    id: 'app.bsky.actor.putPreferences',
+    defs: {
+      main: {
+        type: 'procedure',
+        description: 'Sets the private preferences attached to the account.',
+        input: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['preferences'],
+            properties: {
+              preferences: {
+                type: 'ref',
+                ref: 'lex:app.bsky.actor.defs#preferences',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyActorSearchActors: {
+    lexicon: 1,
+    id: 'app.bsky.actor.searchActors',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'Find actors matching search criteria.',
+        parameters: {
+          type: 'params',
+          properties: {
+            term: {
+              type: 'string',
+            },
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['actors'],
+            properties: {
+              cursor: {
+                type: 'string',
+              },
+              actors: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.actor.defs#profileView',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyActorSearchActorsTypeahead: {
+    lexicon: 1,
+    id: 'app.bsky.actor.searchActorsTypeahead',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'Find actor suggestions for a search term.',
+        parameters: {
+          type: 'params',
+          properties: {
+            term: {
+              type: 'string',
+            },
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['actors'],
+            properties: {
+              actors: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.actor.defs#profileViewBasic',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyEmbedExternal: {
+    lexicon: 1,
+    id: 'app.bsky.embed.external',
+    description:
+      'A representation of some externally linked content, embedded in another form of content',
+    defs: {
+      main: {
+        type: 'object',
+        required: ['external'],
+        properties: {
+          external: {
+            type: 'ref',
+            ref: 'lex:app.bsky.embed.external#external',
+          },
+        },
+      },
+      external: {
+        type: 'object',
+        required: ['uri', 'title', 'description'],
+        properties: {
+          uri: {
+            type: 'string',
+            format: 'uri',
+          },
+          title: {
+            type: 'string',
+          },
+          description: {
+            type: 'string',
+          },
+          thumb: {
+            type: 'blob',
+            accept: ['image/*'],
+            maxSize: 1000000,
+          },
+        },
+      },
+      view: {
+        type: 'object',
+        required: ['external'],
+        properties: {
+          external: {
+            type: 'ref',
+            ref: 'lex:app.bsky.embed.external#viewExternal',
+          },
+        },
+      },
+      viewExternal: {
+        type: 'object',
+        required: ['uri', 'title', 'description'],
+        properties: {
+          uri: {
+            type: 'string',
+            format: 'uri',
+          },
+          title: {
+            type: 'string',
+          },
+          description: {
+            type: 'string',
+          },
+          thumb: {
+            type: 'string',
+          },
+        },
+      },
+    },
+  },
+  AppBskyEmbedImages: {
+    lexicon: 1,
+    id: 'app.bsky.embed.images',
+    description: 'A set of images embedded in some other form of content',
+    defs: {
+      main: {
+        type: 'object',
+        required: ['images'],
+        properties: {
+          images: {
+            type: 'array',
+            items: {
+              type: 'ref',
+              ref: 'lex:app.bsky.embed.images#image',
+            },
+            maxLength: 4,
+          },
+        },
+      },
+      image: {
+        type: 'object',
+        required: ['image', 'alt'],
+        properties: {
+          image: {
+            type: 'blob',
+            accept: ['image/*'],
+            maxSize: 1000000,
+          },
+          alt: {
+            type: 'string',
+          },
+        },
+      },
+      view: {
+        type: 'object',
+        required: ['images'],
+        properties: {
+          images: {
+            type: 'array',
+            items: {
+              type: 'ref',
+              ref: 'lex:app.bsky.embed.images#viewImage',
+            },
+            maxLength: 4,
+          },
+        },
+      },
+      viewImage: {
+        type: 'object',
+        required: ['thumb', 'fullsize', 'alt'],
+        properties: {
+          thumb: {
+            type: 'string',
+          },
+          fullsize: {
+            type: 'string',
+          },
+          alt: {
+            type: 'string',
+          },
+        },
+      },
+    },
+  },
+  AppBskyEmbedRecord: {
+    lexicon: 1,
+    id: 'app.bsky.embed.record',
+    description:
+      'A representation of a record embedded in another form of content',
+    defs: {
+      main: {
+        type: 'object',
+        required: ['record'],
+        properties: {
+          record: {
+            type: 'ref',
+            ref: 'lex:com.atproto.repo.strongRef',
+          },
+        },
+      },
+      view: {
+        type: 'object',
+        required: ['record'],
+        properties: {
+          record: {
+            type: 'union',
+            refs: [
+              'lex:app.bsky.embed.record#viewRecord',
+              'lex:app.bsky.embed.record#viewNotFound',
+              'lex:app.bsky.embed.record#viewBlocked',
+              'lex:app.bsky.feed.defs#generatorView',
+              'lex:app.bsky.graph.defs#listView',
+            ],
+          },
+        },
+      },
+      viewRecord: {
+        type: 'object',
+        required: ['uri', 'cid', 'author', 'value', 'indexedAt'],
+        properties: {
+          uri: {
+            type: 'string',
+            format: 'at-uri',
+          },
+          cid: {
+            type: 'string',
+            format: 'cid',
+          },
+          author: {
+            type: 'ref',
+            ref: 'lex:app.bsky.actor.defs#profileViewBasic',
+          },
+          value: {
+            type: 'unknown',
+          },
+          labels: {
+            type: 'array',
+            items: {
+              type: 'ref',
+              ref: 'lex:com.atproto.label.defs#label',
+            },
+          },
+          embeds: {
+            type: 'array',
+            items: {
+              type: 'union',
+              refs: [
+                'lex:app.bsky.embed.images#view',
+                'lex:app.bsky.embed.external#view',
+                'lex:app.bsky.embed.record#view',
+                'lex:app.bsky.embed.recordWithMedia#view',
+              ],
+            },
+          },
+          indexedAt: {
+            type: 'string',
+            format: 'datetime',
+          },
+        },
+      },
+      viewNotFound: {
+        type: 'object',
+        required: ['uri'],
+        properties: {
+          uri: {
+            type: 'string',
+            format: 'at-uri',
+          },
+        },
+      },
+      viewBlocked: {
+        type: 'object',
+        required: ['uri'],
+        properties: {
+          uri: {
+            type: 'string',
+            format: 'at-uri',
+          },
+        },
+      },
+    },
+  },
+  AppBskyEmbedRecordWithMedia: {
+    lexicon: 1,
+    id: 'app.bsky.embed.recordWithMedia',
+    description:
+      'A representation of a record embedded in another form of content, alongside other compatible embeds',
+    defs: {
+      main: {
+        type: 'object',
+        required: ['record', 'media'],
+        properties: {
+          record: {
+            type: 'ref',
+            ref: 'lex:app.bsky.embed.record',
+          },
+          media: {
+            type: 'union',
+            refs: ['lex:app.bsky.embed.images', 'lex:app.bsky.embed.external'],
+          },
+        },
+      },
+      view: {
+        type: 'object',
+        required: ['record', 'media'],
+        properties: {
+          record: {
+            type: 'ref',
+            ref: 'lex:app.bsky.embed.record#view',
+          },
+          media: {
+            type: 'union',
+            refs: [
+              'lex:app.bsky.embed.images#view',
+              'lex:app.bsky.embed.external#view',
+            ],
+          },
+        },
+      },
+    },
+  },
+  AppBskyFeedDefs: {
+    lexicon: 1,
+    id: 'app.bsky.feed.defs',
+    defs: {
+      postView: {
+        type: 'object',
+        required: ['uri', 'cid', 'author', 'record', 'indexedAt'],
+        properties: {
+          uri: {
+            type: 'string',
+            format: 'at-uri',
+          },
+          cid: {
+            type: 'string',
+            format: 'cid',
+          },
+          author: {
+            type: 'ref',
+            ref: 'lex:app.bsky.actor.defs#profileViewBasic',
+          },
+          record: {
+            type: 'unknown',
+          },
+          embed: {
+            type: 'union',
+            refs: [
+              'lex:app.bsky.embed.images#view',
+              'lex:app.bsky.embed.external#view',
+              'lex:app.bsky.embed.record#view',
+              'lex:app.bsky.embed.recordWithMedia#view',
+            ],
+          },
+          replyCount: {
+            type: 'integer',
+          },
+          repostCount: {
+            type: 'integer',
+          },
+          likeCount: {
+            type: 'integer',
+          },
+          indexedAt: {
+            type: 'string',
+            format: 'datetime',
+          },
+          viewer: {
+            type: 'ref',
+            ref: 'lex:app.bsky.feed.defs#viewerState',
+          },
+          labels: {
+            type: 'array',
+            items: {
+              type: 'ref',
+              ref: 'lex:com.atproto.label.defs#label',
+            },
+          },
+        },
+      },
+      viewerState: {
+        type: 'object',
+        properties: {
+          repost: {
+            type: 'string',
+            format: 'at-uri',
+          },
+          like: {
+            type: 'string',
+            format: 'at-uri',
+          },
+        },
+      },
+      feedViewPost: {
+        type: 'object',
+        required: ['post'],
+        properties: {
+          post: {
+            type: 'ref',
+            ref: 'lex:app.bsky.feed.defs#postView',
+          },
+          reply: {
+            type: 'ref',
+            ref: 'lex:app.bsky.feed.defs#replyRef',
+          },
+          reason: {
+            type: 'union',
+            refs: ['lex:app.bsky.feed.defs#reasonRepost'],
+          },
+        },
+      },
+      replyRef: {
+        type: 'object',
+        required: ['root', 'parent'],
+        properties: {
+          root: {
+            type: 'union',
+            refs: [
+              'lex:app.bsky.feed.defs#postView',
+              'lex:app.bsky.feed.defs#notFoundPost',
+              'lex:app.bsky.feed.defs#blockedPost',
+            ],
+          },
+          parent: {
+            type: 'union',
+            refs: [
+              'lex:app.bsky.feed.defs#postView',
+              'lex:app.bsky.feed.defs#notFoundPost',
+              'lex:app.bsky.feed.defs#blockedPost',
+            ],
+          },
+        },
+      },
+      reasonRepost: {
+        type: 'object',
+        required: ['by', 'indexedAt'],
+        properties: {
+          by: {
+            type: 'ref',
+            ref: 'lex:app.bsky.actor.defs#profileViewBasic',
+          },
+          indexedAt: {
+            type: 'string',
+            format: 'datetime',
+          },
+        },
+      },
+      threadViewPost: {
+        type: 'object',
+        required: ['post'],
+        properties: {
+          post: {
+            type: 'ref',
+            ref: 'lex:app.bsky.feed.defs#postView',
+          },
+          parent: {
+            type: 'union',
+            refs: [
+              'lex:app.bsky.feed.defs#threadViewPost',
+              'lex:app.bsky.feed.defs#notFoundPost',
+              'lex:app.bsky.feed.defs#blockedPost',
+            ],
+          },
+          replies: {
+            type: 'array',
+            items: {
+              type: 'union',
+              refs: [
+                'lex:app.bsky.feed.defs#threadViewPost',
+                'lex:app.bsky.feed.defs#notFoundPost',
+                'lex:app.bsky.feed.defs#blockedPost',
+              ],
+            },
+          },
+        },
+      },
+      notFoundPost: {
+        type: 'object',
+        required: ['uri', 'notFound'],
+        properties: {
+          uri: {
+            type: 'string',
+            format: 'at-uri',
+          },
+          notFound: {
+            type: 'boolean',
+            const: true,
+          },
+        },
+      },
+      blockedPost: {
+        type: 'object',
+        required: ['uri', 'blocked'],
+        properties: {
+          uri: {
+            type: 'string',
+            format: 'at-uri',
+          },
+          blocked: {
+            type: 'boolean',
+            const: true,
+          },
+        },
+      },
+      generatorView: {
+        type: 'object',
+        required: ['uri', 'cid', 'did', 'creator', 'displayName', 'indexedAt'],
+        properties: {
+          uri: {
+            type: 'string',
+            format: 'at-uri',
+          },
+          cid: {
+            type: 'string',
+            format: 'cid',
+          },
+          did: {
+            type: 'string',
+            format: 'did',
+          },
+          creator: {
+            type: 'ref',
+            ref: 'lex:app.bsky.actor.defs#profileView',
+          },
+          displayName: {
+            type: 'string',
+          },
+          description: {
+            type: 'string',
+            maxGraphemes: 300,
+            maxLength: 3000,
+          },
+          descriptionFacets: {
+            type: 'array',
+            items: {
+              type: 'ref',
+              ref: 'lex:app.bsky.richtext.facet',
+            },
+          },
+          avatar: {
+            type: 'string',
+          },
+          likeCount: {
+            type: 'integer',
+            minimum: 0,
+          },
+          viewer: {
+            type: 'ref',
+            ref: 'lex:app.bsky.feed.defs#generatorViewerState',
+          },
+          indexedAt: {
+            type: 'string',
+            format: 'datetime',
+          },
+        },
+      },
+      generatorViewerState: {
+        type: 'object',
+        properties: {
+          like: {
+            type: 'string',
+            format: 'at-uri',
+          },
+        },
+      },
+      skeletonFeedPost: {
+        type: 'object',
+        required: ['post'],
+        properties: {
+          post: {
+            type: 'string',
+            format: 'at-uri',
+          },
+          reason: {
+            type: 'union',
+            refs: ['lex:app.bsky.feed.defs#skeletonReasonRepost'],
+          },
+        },
+      },
+      skeletonReasonRepost: {
+        type: 'object',
+        required: ['repost'],
+        properties: {
+          repost: {
+            type: 'string',
+            format: 'at-uri',
+          },
+        },
+      },
+    },
+  },
+  AppBskyFeedDescribeFeedGenerator: {
+    lexicon: 1,
+    id: 'app.bsky.feed.describeFeedGenerator',
+    defs: {
+      main: {
+        type: 'query',
+        description:
+          'Returns information about a given feed generator including TOS & offered feed URIs',
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['did', 'feeds'],
+            properties: {
+              did: {
+                type: 'string',
+                format: 'did',
+              },
+              feeds: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.feed.describeFeedGenerator#feed',
+                },
+              },
+              links: {
+                type: 'ref',
+                ref: 'lex:app.bsky.feed.describeFeedGenerator#links',
+              },
+            },
+          },
+        },
+      },
+      feed: {
+        type: 'object',
+        required: ['uri'],
+        properties: {
+          uri: {
+            type: 'string',
+            format: 'at-uri',
+          },
+        },
+      },
+      links: {
+        type: 'object',
+        properties: {
+          privacyPolicy: {
+            type: 'string',
+          },
+          termsOfService: {
+            type: 'string',
+          },
+        },
+      },
+    },
+  },
+  AppBskyFeedGenerator: {
+    lexicon: 1,
+    id: 'app.bsky.feed.generator',
+    defs: {
+      main: {
+        type: 'record',
+        description: 'A declaration of the existence of a feed generator',
+        key: 'any',
+        record: {
+          type: 'object',
+          required: ['did', 'displayName', 'createdAt'],
+          properties: {
+            did: {
+              type: 'string',
+              format: 'did',
+            },
+            displayName: {
+              type: 'string',
+              maxGraphemes: 24,
+              maxLength: 240,
+            },
+            description: {
+              type: 'string',
+              maxGraphemes: 300,
+              maxLength: 3000,
+            },
+            descriptionFacets: {
+              type: 'array',
+              items: {
+                type: 'ref',
+                ref: 'lex:app.bsky.richtext.facet',
+              },
+            },
+            avatar: {
+              type: 'blob',
+              accept: ['image/png', 'image/jpeg'],
+              maxSize: 1000000,
+            },
+            createdAt: {
+              type: 'string',
+              format: 'datetime',
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyFeedGetActorFeeds: {
+    lexicon: 1,
+    id: 'app.bsky.feed.getActorFeeds',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'Retrieve a list of feeds created by a given actor',
+        parameters: {
+          type: 'params',
+          required: ['actor'],
+          properties: {
+            actor: {
+              type: 'string',
+              format: 'at-identifier',
+            },
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['feeds'],
+            properties: {
+              cursor: {
+                type: 'string',
+              },
+              feeds: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.feed.defs#generatorView',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyFeedGetAuthorFeed: {
+    lexicon: 1,
+    id: 'app.bsky.feed.getAuthorFeed',
+    defs: {
+      main: {
+        type: 'query',
+        description: "A view of an actor's feed.",
+        parameters: {
+          type: 'params',
+          required: ['actor'],
+          properties: {
+            actor: {
+              type: 'string',
+              format: 'at-identifier',
+            },
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['feed'],
+            properties: {
+              cursor: {
+                type: 'string',
+              },
+              feed: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.feed.defs#feedViewPost',
+                },
+              },
+            },
+          },
+        },
+        errors: [
+          {
+            name: 'BlockedActor',
+          },
+          {
+            name: 'BlockedByActor',
+          },
+        ],
+      },
+    },
+  },
+  AppBskyFeedGetFeed: {
+    lexicon: 1,
+    id: 'app.bsky.feed.getFeed',
+    defs: {
+      main: {
+        type: 'query',
+        description:
+          "Compose and hydrate a feed from a user's selected feed generator",
+        parameters: {
+          type: 'params',
+          required: ['feed'],
+          properties: {
+            feed: {
+              type: 'string',
+              format: 'at-uri',
+            },
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['feed'],
+            properties: {
+              cursor: {
+                type: 'string',
+              },
+              feed: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.feed.defs#feedViewPost',
+                },
+              },
+            },
+          },
+        },
+        errors: [
+          {
+            name: 'UnknownFeed',
+          },
+        ],
+      },
+    },
+  },
+  AppBskyFeedGetFeedGenerator: {
+    lexicon: 1,
+    id: 'app.bsky.feed.getFeedGenerator',
+    defs: {
+      main: {
+        type: 'query',
+        description:
+          'Get information about a specific feed offered by a feed generator, such as its online status',
+        parameters: {
+          type: 'params',
+          required: ['feed'],
+          properties: {
+            feed: {
+              type: 'string',
+              format: 'at-uri',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['view', 'isOnline', 'isValid'],
+            properties: {
+              view: {
+                type: 'ref',
+                ref: 'lex:app.bsky.feed.defs#generatorView',
+              },
+              isOnline: {
+                type: 'boolean',
+              },
+              isValid: {
+                type: 'boolean',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyFeedGetFeedGenerators: {
+    lexicon: 1,
+    id: 'app.bsky.feed.getFeedGenerators',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'Get information about a list of feed generators',
+        parameters: {
+          type: 'params',
+          required: ['feeds'],
+          properties: {
+            feeds: {
+              type: 'array',
+              items: {
+                type: 'string',
+                format: 'at-uri',
+              },
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['feeds'],
+            properties: {
+              feeds: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.feed.defs#generatorView',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyFeedGetFeedSkeleton: {
+    lexicon: 1,
+    id: 'app.bsky.feed.getFeedSkeleton',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'A skeleton of a feed provided by a feed generator',
+        parameters: {
+          type: 'params',
+          required: ['feed'],
+          properties: {
+            feed: {
+              type: 'string',
+              format: 'at-uri',
+            },
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['feed'],
+            properties: {
+              cursor: {
+                type: 'string',
+              },
+              feed: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.feed.defs#skeletonFeedPost',
+                },
+              },
+            },
+          },
+        },
+        errors: [
+          {
+            name: 'UnknownFeed',
+          },
+        ],
+      },
+    },
+  },
+  AppBskyFeedGetLikes: {
+    lexicon: 1,
+    id: 'app.bsky.feed.getLikes',
+    defs: {
+      main: {
+        type: 'query',
+        parameters: {
+          type: 'params',
+          required: ['uri'],
+          properties: {
+            uri: {
+              type: 'string',
+              format: 'at-uri',
+            },
+            cid: {
+              type: 'string',
+              format: 'cid',
+            },
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['uri', 'likes'],
+            properties: {
+              uri: {
+                type: 'string',
+                format: 'at-uri',
+              },
+              cid: {
+                type: 'string',
+                format: 'cid',
+              },
+              cursor: {
+                type: 'string',
+              },
+              likes: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.feed.getLikes#like',
+                },
+              },
+            },
+          },
+        },
+      },
+      like: {
+        type: 'object',
+        required: ['indexedAt', 'createdAt', 'actor'],
+        properties: {
+          indexedAt: {
+            type: 'string',
+            format: 'datetime',
+          },
+          createdAt: {
+            type: 'string',
+            format: 'datetime',
+          },
+          actor: {
+            type: 'ref',
+            ref: 'lex:app.bsky.actor.defs#profileView',
+          },
+        },
+      },
+    },
+  },
+  AppBskyFeedGetPostThread: {
+    lexicon: 1,
+    id: 'app.bsky.feed.getPostThread',
+    defs: {
+      main: {
+        type: 'query',
+        parameters: {
+          type: 'params',
+          required: ['uri'],
+          properties: {
+            uri: {
+              type: 'string',
+              format: 'at-uri',
+            },
+            depth: {
+              type: 'integer',
+              default: 6,
+              minimum: 0,
+              maximum: 1000,
+            },
+            parentHeight: {
+              type: 'integer',
+              default: 80,
+              minimum: 0,
+              maximum: 1000,
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['thread'],
+            properties: {
+              thread: {
+                type: 'union',
+                refs: [
+                  'lex:app.bsky.feed.defs#threadViewPost',
+                  'lex:app.bsky.feed.defs#notFoundPost',
+                  'lex:app.bsky.feed.defs#blockedPost',
+                ],
+              },
+            },
+          },
+        },
+        errors: [
+          {
+            name: 'NotFound',
+          },
+        ],
+      },
+    },
+  },
+  AppBskyFeedGetPosts: {
+    lexicon: 1,
+    id: 'app.bsky.feed.getPosts',
+    defs: {
+      main: {
+        type: 'query',
+        description: "A view of an actor's feed.",
+        parameters: {
+          type: 'params',
+          required: ['uris'],
+          properties: {
+            uris: {
+              type: 'array',
+              items: {
+                type: 'string',
+                format: 'at-uri',
+              },
+              maxLength: 25,
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['posts'],
+            properties: {
+              posts: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.feed.defs#postView',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyFeedGetRepostedBy: {
+    lexicon: 1,
+    id: 'app.bsky.feed.getRepostedBy',
+    defs: {
+      main: {
+        type: 'query',
+        parameters: {
+          type: 'params',
+          required: ['uri'],
+          properties: {
+            uri: {
+              type: 'string',
+              format: 'at-uri',
+            },
+            cid: {
+              type: 'string',
+              format: 'cid',
+            },
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['uri', 'repostedBy'],
+            properties: {
+              uri: {
+                type: 'string',
+                format: 'at-uri',
+              },
+              cid: {
+                type: 'string',
+                format: 'cid',
+              },
+              cursor: {
+                type: 'string',
+              },
+              repostedBy: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.actor.defs#profileView',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyFeedGetTimeline: {
+    lexicon: 1,
+    id: 'app.bsky.feed.getTimeline',
+    defs: {
+      main: {
+        type: 'query',
+        description: "A view of the user's home timeline.",
+        parameters: {
+          type: 'params',
+          properties: {
+            algorithm: {
+              type: 'string',
+            },
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['feed'],
+            properties: {
+              cursor: {
+                type: 'string',
+              },
+              feed: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.feed.defs#feedViewPost',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyFeedLike: {
+    lexicon: 1,
+    id: 'app.bsky.feed.like',
+    defs: {
+      main: {
+        type: 'record',
+        key: 'tid',
+        record: {
+          type: 'object',
+          required: ['subject', 'createdAt'],
+          properties: {
+            subject: {
+              type: 'ref',
+              ref: 'lex:com.atproto.repo.strongRef',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'datetime',
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyFeedPost: {
+    lexicon: 1,
+    id: 'app.bsky.feed.post',
+    defs: {
+      main: {
+        type: 'record',
+        key: 'tid',
+        record: {
+          type: 'object',
+          required: ['text', 'createdAt'],
+          properties: {
+            text: {
+              type: 'string',
+              maxLength: 3000,
+              maxGraphemes: 300,
+            },
+            entities: {
+              type: 'array',
+              description: 'Deprecated: replaced by app.bsky.richtext.facet.',
+              items: {
+                type: 'ref',
+                ref: 'lex:app.bsky.feed.post#entity',
+              },
+            },
+            facets: {
+              type: 'array',
+              items: {
+                type: 'ref',
+                ref: 'lex:app.bsky.richtext.facet',
+              },
+            },
+            reply: {
+              type: 'ref',
+              ref: 'lex:app.bsky.feed.post#replyRef',
+            },
+            embed: {
+              type: 'union',
+              refs: [
+                'lex:app.bsky.embed.images',
+                'lex:app.bsky.embed.external',
+                'lex:app.bsky.embed.record',
+                'lex:app.bsky.embed.recordWithMedia',
+              ],
+            },
+            langs: {
+              type: 'array',
+              maxLength: 3,
+              items: {
+                type: 'string',
+                format: 'language',
+              },
+            },
+            createdAt: {
+              type: 'string',
+              format: 'datetime',
+            },
+          },
+        },
+      },
+      replyRef: {
+        type: 'object',
+        required: ['root', 'parent'],
+        properties: {
+          root: {
+            type: 'ref',
+            ref: 'lex:com.atproto.repo.strongRef',
+          },
+          parent: {
+            type: 'ref',
+            ref: 'lex:com.atproto.repo.strongRef',
+          },
+        },
+      },
+      entity: {
+        type: 'object',
+        description: 'Deprecated: use facets instead.',
+        required: ['index', 'type', 'value'],
+        properties: {
+          index: {
+            type: 'ref',
+            ref: 'lex:app.bsky.feed.post#textSlice',
+          },
+          type: {
+            type: 'string',
+            description: "Expected values are 'mention' and 'link'.",
+          },
+          value: {
+            type: 'string',
+          },
+        },
+      },
+      textSlice: {
+        type: 'object',
+        description:
+          'Deprecated. Use app.bsky.richtext instead -- A text segment. Start is inclusive, end is exclusive. Indices are for utf16-encoded strings.',
+        required: ['start', 'end'],
+        properties: {
+          start: {
+            type: 'integer',
+            minimum: 0,
+          },
+          end: {
+            type: 'integer',
+            minimum: 0,
+          },
+        },
+      },
+    },
+  },
+  AppBskyFeedRepost: {
+    lexicon: 1,
+    id: 'app.bsky.feed.repost',
+    defs: {
+      main: {
+        type: 'record',
+        key: 'tid',
+        record: {
+          type: 'object',
+          required: ['subject', 'createdAt'],
+          properties: {
+            subject: {
+              type: 'ref',
+              ref: 'lex:com.atproto.repo.strongRef',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'datetime',
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyGraphBlock: {
+    lexicon: 1,
+    id: 'app.bsky.graph.block',
+    defs: {
+      main: {
+        type: 'record',
+        description: 'A block.',
+        key: 'tid',
+        record: {
+          type: 'object',
+          required: ['subject', 'createdAt'],
+          properties: {
+            subject: {
+              type: 'string',
+              format: 'did',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'datetime',
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyGraphDefs: {
+    lexicon: 1,
+    id: 'app.bsky.graph.defs',
+    defs: {
+      listViewBasic: {
+        type: 'object',
+        required: ['uri', 'cid', 'name', 'purpose'],
+        properties: {
+          uri: {
+            type: 'string',
+            format: 'at-uri',
+          },
+          cid: {
+            type: 'string',
+            format: 'cid',
+          },
+          name: {
+            type: 'string',
+            maxLength: 64,
+            minLength: 1,
+          },
+          purpose: {
+            type: 'ref',
+            ref: 'lex:app.bsky.graph.defs#listPurpose',
+          },
+          avatar: {
+            type: 'string',
+          },
+          viewer: {
+            type: 'ref',
+            ref: 'lex:app.bsky.graph.defs#listViewerState',
+          },
+          indexedAt: {
+            type: 'string',
+            format: 'datetime',
+          },
+        },
+      },
+      listView: {
+        type: 'object',
+        required: ['uri', 'cid', 'creator', 'name', 'purpose', 'indexedAt'],
+        properties: {
+          uri: {
+            type: 'string',
+            format: 'at-uri',
+          },
+          cid: {
+            type: 'string',
+            format: 'cid',
+          },
+          creator: {
+            type: 'ref',
+            ref: 'lex:app.bsky.actor.defs#profileView',
+          },
+          name: {
+            type: 'string',
+            maxLength: 64,
+            minLength: 1,
+          },
+          purpose: {
+            type: 'ref',
+            ref: 'lex:app.bsky.graph.defs#listPurpose',
+          },
+          description: {
+            type: 'string',
+            maxGraphemes: 300,
+            maxLength: 3000,
+          },
+          descriptionFacets: {
+            type: 'array',
+            items: {
+              type: 'ref',
+              ref: 'lex:app.bsky.richtext.facet',
+            },
+          },
+          avatar: {
+            type: 'string',
+          },
+          viewer: {
+            type: 'ref',
+            ref: 'lex:app.bsky.graph.defs#listViewerState',
+          },
+          indexedAt: {
+            type: 'string',
+            format: 'datetime',
+          },
+        },
+      },
+      listItemView: {
+        type: 'object',
+        required: ['subject'],
+        properties: {
+          subject: {
+            type: 'ref',
+            ref: 'lex:app.bsky.actor.defs#profileView',
+          },
+        },
+      },
+      listPurpose: {
+        type: 'string',
+        knownValues: ['app.bsky.graph.defs#modlist'],
+      },
+      modlist: {
+        type: 'token',
+        description:
+          'A list of actors to apply an aggregate moderation action (mute/block) on',
+      },
+      listViewerState: {
+        type: 'object',
+        properties: {
+          muted: {
+            type: 'boolean',
+          },
+        },
+      },
+    },
+  },
+  AppBskyGraphFollow: {
+    lexicon: 1,
+    id: 'app.bsky.graph.follow',
+    defs: {
+      main: {
+        type: 'record',
+        description: 'A social follow.',
+        key: 'tid',
+        record: {
+          type: 'object',
+          required: ['subject', 'createdAt'],
+          properties: {
+            subject: {
+              type: 'string',
+              format: 'did',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'datetime',
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyGraphGetBlocks: {
+    lexicon: 1,
+    id: 'app.bsky.graph.getBlocks',
+    defs: {
+      main: {
+        type: 'query',
+        description: "Who is the requester's account blocking?",
+        parameters: {
+          type: 'params',
+          properties: {
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['blocks'],
+            properties: {
+              cursor: {
+                type: 'string',
+              },
+              blocks: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.actor.defs#profileView',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyGraphGetFollowers: {
+    lexicon: 1,
+    id: 'app.bsky.graph.getFollowers',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'Who is following an actor?',
+        parameters: {
+          type: 'params',
+          required: ['actor'],
+          properties: {
+            actor: {
+              type: 'string',
+              format: 'at-identifier',
+            },
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['subject', 'followers'],
+            properties: {
+              subject: {
+                type: 'ref',
+                ref: 'lex:app.bsky.actor.defs#profileView',
+              },
+              cursor: {
+                type: 'string',
+              },
+              followers: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.actor.defs#profileView',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyGraphGetFollows: {
+    lexicon: 1,
+    id: 'app.bsky.graph.getFollows',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'Who is an actor following?',
+        parameters: {
+          type: 'params',
+          required: ['actor'],
+          properties: {
+            actor: {
+              type: 'string',
+              format: 'at-identifier',
+            },
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['subject', 'follows'],
+            properties: {
+              subject: {
+                type: 'ref',
+                ref: 'lex:app.bsky.actor.defs#profileView',
+              },
+              cursor: {
+                type: 'string',
+              },
+              follows: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.actor.defs#profileView',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyGraphGetList: {
+    lexicon: 1,
+    id: 'app.bsky.graph.getList',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'Fetch a list of actors',
+        parameters: {
+          type: 'params',
+          required: ['list'],
+          properties: {
+            list: {
+              type: 'string',
+              format: 'at-uri',
+            },
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['list', 'items'],
+            properties: {
+              cursor: {
+                type: 'string',
+              },
+              list: {
+                type: 'ref',
+                ref: 'lex:app.bsky.graph.defs#listView',
+              },
+              items: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.graph.defs#listItemView',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyGraphGetListMutes: {
+    lexicon: 1,
+    id: 'app.bsky.graph.getListMutes',
+    defs: {
+      main: {
+        type: 'query',
+        description: "Which lists is the requester's account muting?",
+        parameters: {
+          type: 'params',
+          properties: {
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['lists'],
+            properties: {
+              cursor: {
+                type: 'string',
+              },
+              lists: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.graph.defs#listView',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyGraphGetLists: {
+    lexicon: 1,
+    id: 'app.bsky.graph.getLists',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'Fetch a list of lists that belong to an actor',
+        parameters: {
+          type: 'params',
+          required: ['actor'],
+          properties: {
+            actor: {
+              type: 'string',
+              format: 'at-identifier',
+            },
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['lists'],
+            properties: {
+              cursor: {
+                type: 'string',
+              },
+              lists: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.graph.defs#listView',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyGraphGetMutes: {
+    lexicon: 1,
+    id: 'app.bsky.graph.getMutes',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'Who does the viewer mute?',
+        parameters: {
+          type: 'params',
+          properties: {
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['mutes'],
+            properties: {
+              cursor: {
+                type: 'string',
+              },
+              mutes: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.actor.defs#profileView',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyGraphList: {
+    lexicon: 1,
+    id: 'app.bsky.graph.list',
+    defs: {
+      main: {
+        type: 'record',
+        description: 'A declaration of a list of actors.',
+        key: 'tid',
+        record: {
+          type: 'object',
+          required: ['name', 'purpose', 'createdAt'],
+          properties: {
+            purpose: {
+              type: 'ref',
+              ref: 'lex:app.bsky.graph.defs#listPurpose',
+            },
+            name: {
+              type: 'string',
+              maxLength: 64,
+              minLength: 1,
+            },
+            description: {
+              type: 'string',
+              maxGraphemes: 300,
+              maxLength: 3000,
+            },
+            descriptionFacets: {
+              type: 'array',
+              items: {
+                type: 'ref',
+                ref: 'lex:app.bsky.richtext.facet',
+              },
+            },
+            avatar: {
+              type: 'blob',
+              accept: ['image/png', 'image/jpeg'],
+              maxSize: 1000000,
+            },
+            createdAt: {
+              type: 'string',
+              format: 'datetime',
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyGraphListitem: {
+    lexicon: 1,
+    id: 'app.bsky.graph.listitem',
+    defs: {
+      main: {
+        type: 'record',
+        description: 'An item under a declared list of actors',
+        key: 'tid',
+        record: {
+          type: 'object',
+          required: ['subject', 'list', 'createdAt'],
+          properties: {
+            subject: {
+              type: 'string',
+              format: 'did',
+            },
+            list: {
+              type: 'string',
+              format: 'at-uri',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'datetime',
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyGraphMuteActor: {
+    lexicon: 1,
+    id: 'app.bsky.graph.muteActor',
+    defs: {
+      main: {
+        type: 'procedure',
+        description: 'Mute an actor by did or handle.',
+        input: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['actor'],
+            properties: {
+              actor: {
+                type: 'string',
+                format: 'at-identifier',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyGraphMuteActorList: {
+    lexicon: 1,
+    id: 'app.bsky.graph.muteActorList',
+    defs: {
+      main: {
+        type: 'procedure',
+        description: 'Mute a list of actors.',
+        input: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['list'],
+            properties: {
+              list: {
+                type: 'string',
+                format: 'at-uri',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyGraphUnmuteActor: {
+    lexicon: 1,
+    id: 'app.bsky.graph.unmuteActor',
+    defs: {
+      main: {
+        type: 'procedure',
+        description: 'Unmute an actor by did or handle.',
+        input: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['actor'],
+            properties: {
+              actor: {
+                type: 'string',
+                format: 'at-identifier',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyGraphUnmuteActorList: {
+    lexicon: 1,
+    id: 'app.bsky.graph.unmuteActorList',
+    defs: {
+      main: {
+        type: 'procedure',
+        description: 'Unmute a list of actors.',
+        input: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['list'],
+            properties: {
+              list: {
+                type: 'string',
+                format: 'at-uri',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyNotificationGetUnreadCount: {
+    lexicon: 1,
+    id: 'app.bsky.notification.getUnreadCount',
+    defs: {
+      main: {
+        type: 'query',
+        parameters: {
+          type: 'params',
+          properties: {
+            seenAt: {
+              type: 'string',
+              format: 'datetime',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['count'],
+            properties: {
+              count: {
+                type: 'integer',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyNotificationListNotifications: {
+    lexicon: 1,
+    id: 'app.bsky.notification.listNotifications',
+    defs: {
+      main: {
+        type: 'query',
+        parameters: {
+          type: 'params',
+          properties: {
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+            },
+            seenAt: {
+              type: 'string',
+              format: 'datetime',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['notifications'],
+            properties: {
+              cursor: {
+                type: 'string',
+              },
+              notifications: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.notification.listNotifications#notification',
+                },
+              },
+            },
+          },
+        },
+      },
+      notification: {
+        type: 'object',
+        required: [
+          'uri',
+          'cid',
+          'author',
+          'reason',
+          'record',
+          'isRead',
+          'indexedAt',
+        ],
+        properties: {
+          uri: {
+            type: 'string',
+            format: 'at-uri',
+          },
+          cid: {
+            type: 'string',
+            format: 'cid',
+          },
+          author: {
+            type: 'ref',
+            ref: 'lex:app.bsky.actor.defs#profileView',
+          },
+          reason: {
+            type: 'string',
+            description:
+              "Expected values are 'like', 'repost', 'follow', 'mention', 'reply', and 'quote'.",
+            knownValues: [
+              'like',
+              'repost',
+              'follow',
+              'mention',
+              'reply',
+              'quote',
+            ],
+          },
+          reasonSubject: {
+            type: 'string',
+            format: 'at-uri',
+          },
+          record: {
+            type: 'unknown',
+          },
+          isRead: {
+            type: 'boolean',
+          },
+          indexedAt: {
+            type: 'string',
+            format: 'datetime',
+          },
+          labels: {
+            type: 'array',
+            items: {
+              type: 'ref',
+              ref: 'lex:com.atproto.label.defs#label',
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyNotificationUpdateSeen: {
+    lexicon: 1,
+    id: 'app.bsky.notification.updateSeen',
+    defs: {
+      main: {
+        type: 'procedure',
+        description: 'Notify server that the user has seen notifications.',
+        input: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['seenAt'],
+            properties: {
+              seenAt: {
+                type: 'string',
+                format: 'datetime',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyRichtextFacet: {
+    lexicon: 1,
+    id: 'app.bsky.richtext.facet',
+    defs: {
+      main: {
+        type: 'object',
+        required: ['index', 'features'],
+        properties: {
+          index: {
+            type: 'ref',
+            ref: 'lex:app.bsky.richtext.facet#byteSlice',
+          },
+          features: {
+            type: 'array',
+            items: {
+              type: 'union',
+              refs: [
+                'lex:app.bsky.richtext.facet#mention',
+                'lex:app.bsky.richtext.facet#link',
+              ],
+            },
+          },
+        },
+      },
+      mention: {
+        type: 'object',
+        description: 'A facet feature for actor mentions.',
+        required: ['did'],
+        properties: {
+          did: {
+            type: 'string',
+            format: 'did',
+          },
+        },
+      },
+      link: {
+        type: 'object',
+        description: 'A facet feature for links.',
+        required: ['uri'],
+        properties: {
+          uri: {
+            type: 'string',
+            format: 'uri',
+          },
+        },
+      },
+      byteSlice: {
+        type: 'object',
+        description:
+          'A text segment. Start is inclusive, end is exclusive. Indices are for utf8-encoded strings.',
+        required: ['byteStart', 'byteEnd'],
+        properties: {
+          byteStart: {
+            type: 'integer',
+            minimum: 0,
+          },
+          byteEnd: {
+            type: 'integer',
+            minimum: 0,
+          },
+        },
+      },
+    },
+  },
+  AppBskyUnspeccedGetPopular: {
+    lexicon: 1,
+    id: 'app.bsky.unspecced.getPopular',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'An unspecced view of globally popular items',
+        parameters: {
+          type: 'params',
+          properties: {
+            includeNsfw: {
+              type: 'boolean',
+              default: false,
+            },
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['feed'],
+            properties: {
+              cursor: {
+                type: 'string',
+              },
+              feed: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.feed.defs#feedViewPost',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyUnspeccedGetPopularFeedGenerators: {
+    lexicon: 1,
+    id: 'app.bsky.unspecced.getPopularFeedGenerators',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'An unspecced view of globally popular feed generators',
+        parameters: {
+          type: 'params',
+          properties: {
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['feeds'],
+            properties: {
+              cursor: {
+                type: 'string',
+              },
+              feeds: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.feed.defs#generatorView',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  AppBskyUnspeccedGetTimelineSkeleton: {
+    lexicon: 1,
+    id: 'app.bsky.unspecced.getTimelineSkeleton',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'A skeleton of a timeline - UNSPECCED & WILL GO AWAY SOON',
+        parameters: {
+          type: 'params',
+          properties: {
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['feed'],
+            properties: {
+              cursor: {
+                type: 'string',
+              },
+              feed: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:app.bsky.feed.defs#skeletonFeedPost',
+                },
+              },
+            },
+          },
+        },
+        errors: [
+          {
+            name: 'UnknownFeed',
+          },
+        ],
+      },
+    },
+  },
   ComAtprotoAdminDefs: {
     lexicon: 1,
     id: 'com.atproto.admin.defs',
@@ -100,7 +2989,9 @@ export const schemaDict = {
             type: 'union',
             refs: [
               'lex:com.atproto.admin.defs#repoView',
+              'lex:com.atproto.admin.defs#repoViewNotFound',
               'lex:com.atproto.admin.defs#recordView',
+              'lex:com.atproto.admin.defs#recordViewNotFound',
             ],
           },
           subjectBlobs: {
@@ -226,6 +3117,9 @@ export const schemaDict = {
           reason: {
             type: 'string',
           },
+          subjectRepoHandle: {
+            type: 'string',
+          },
           subject: {
             type: 'union',
             refs: [
@@ -274,7 +3168,9 @@ export const schemaDict = {
             type: 'union',
             refs: [
               'lex:com.atproto.admin.defs#repoView',
+              'lex:com.atproto.admin.defs#repoViewNotFound',
               'lex:com.atproto.admin.defs#recordView',
+              'lex:com.atproto.admin.defs#recordViewNotFound',
             ],
           },
           reportedBy: {
@@ -396,6 +3292,16 @@ export const schemaDict = {
           },
         },
       },
+      repoViewNotFound: {
+        type: 'object',
+        required: ['did'],
+        properties: {
+          did: {
+            type: 'string',
+            format: 'did',
+          },
+        },
+      },
       repoRef: {
         type: 'object',
         required: ['did'],
@@ -498,6 +3404,16 @@ export const schemaDict = {
           repo: {
             type: 'ref',
             ref: 'lex:com.atproto.admin.defs#repoView',
+          },
+        },
+      },
+      recordViewNotFound: {
+        type: 'object',
+        required: ['uri'],
+        properties: {
+          uri: {
+            type: 'string',
+            format: 'at-uri',
           },
         },
       },
@@ -832,6 +3748,25 @@ export const schemaDict = {
             subject: {
               type: 'string',
             },
+            ignoreSubjects: {
+              type: 'array',
+              items: {
+                type: 'string',
+              },
+            },
+            actionedBy: {
+              type: 'string',
+              format: 'did',
+              description:
+                'Get all reports that were actioned by a specific moderator',
+            },
+            reporters: {
+              type: 'array',
+              items: {
+                type: 'string',
+              },
+              description: 'Filter reports made by one or more DIDs',
+            },
             resolved: {
               type: 'boolean',
             },
@@ -852,6 +3787,11 @@ export const schemaDict = {
             },
             cursor: {
               type: 'string',
+            },
+            reverse: {
+              type: 'boolean',
+              description:
+                'Reverse the order of the returned records? when true, returns reports in chronological order',
             },
           },
         },
@@ -905,6 +3845,11 @@ export const schemaDict = {
             ref: 'lex:com.atproto.admin.defs#recordViewDetail',
           },
         },
+        errors: [
+          {
+            name: 'RecordNotFound',
+          },
+        ],
       },
     },
   },
@@ -932,6 +3877,49 @@ export const schemaDict = {
             ref: 'lex:com.atproto.admin.defs#repoViewDetail',
           },
         },
+        errors: [
+          {
+            name: 'RepoNotFound',
+          },
+        ],
+      },
+    },
+  },
+  ComAtprotoAdminRebaseRepo: {
+    lexicon: 1,
+    id: 'com.atproto.admin.rebaseRepo',
+    defs: {
+      main: {
+        type: 'procedure',
+        description: "Administrative action to rebase an account's repo",
+        input: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['repo'],
+            properties: {
+              repo: {
+                type: 'string',
+                format: 'at-identifier',
+                description: 'The handle or DID of the repo.',
+              },
+              swapCommit: {
+                type: 'string',
+                format: 'cid',
+                description:
+                  'Compare and swap with the previous commit by cid.',
+              },
+            },
+          },
+        },
+        errors: [
+          {
+            name: 'InvalidSwap',
+          },
+          {
+            name: 'ConcurrentWrites',
+          },
+        ],
       },
     },
   },
@@ -1052,6 +4040,47 @@ export const schemaDict = {
                   type: 'ref',
                   ref: 'lex:com.atproto.admin.defs#repoView',
                 },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  ComAtprotoAdminSendEmail: {
+    lexicon: 1,
+    id: 'com.atproto.admin.sendEmail',
+    defs: {
+      main: {
+        type: 'procedure',
+        description: "Send email to a user's primary email address",
+        input: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['recipientDid', 'content'],
+            properties: {
+              recipientDid: {
+                type: 'string',
+                format: 'did',
+              },
+              content: {
+                type: 'string',
+              },
+              subject: {
+                type: 'string',
+              },
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['sent'],
+            properties: {
+              sent: {
+                type: 'boolean',
               },
             },
           },
@@ -1194,12 +4223,12 @@ export const schemaDict = {
         description: 'Provides the DID of a repo.',
         parameters: {
           type: 'params',
+          required: ['handle'],
           properties: {
             handle: {
               type: 'string',
               format: 'handle',
-              description:
-                "The handle to resolve. If not supplied, will resolve the host's own handle.",
+              description: 'The handle to resolve.',
             },
           },
         },
@@ -1577,7 +4606,7 @@ export const schemaDict = {
       create: {
         type: 'object',
         description: 'Create a new record.',
-        required: ['action', 'collection', 'value'],
+        required: ['collection', 'value'],
         properties: {
           collection: {
             type: 'string',
@@ -1585,6 +4614,7 @@ export const schemaDict = {
           },
           rkey: {
             type: 'string',
+            maxLength: 15,
           },
           value: {
             type: 'unknown',
@@ -1594,7 +4624,7 @@ export const schemaDict = {
       update: {
         type: 'object',
         description: 'Update an existing record.',
-        required: ['action', 'collection', 'rkey', 'value'],
+        required: ['collection', 'rkey', 'value'],
         properties: {
           collection: {
             type: 'string',
@@ -1611,7 +4641,7 @@ export const schemaDict = {
       delete: {
         type: 'object',
         description: 'Delete an existing record.',
-        required: ['action', 'collection', 'rkey'],
+        required: ['collection', 'rkey'],
         properties: {
           collection: {
             type: 'string',
@@ -1650,6 +4680,7 @@ export const schemaDict = {
               rkey: {
                 type: 'string',
                 description: 'The key of the record.',
+                maxLength: 15,
               },
               validate: {
                 type: 'boolean',
@@ -1971,6 +5002,7 @@ export const schemaDict = {
               rkey: {
                 type: 'string',
                 description: 'The key of the record.',
+                maxLength: 15,
               },
               validate: {
                 type: 'boolean',
@@ -2051,6 +5083,9 @@ export const schemaDict = {
         errors: [
           {
             name: 'InvalidSwap',
+          },
+          {
+            name: 'ConcurrentWrites',
           },
         ],
       },
@@ -2960,6 +5995,11 @@ export const schemaDict = {
             },
           },
         },
+        errors: [
+          {
+            name: 'HeadNotFound',
+          },
+        ],
       },
     },
   },
@@ -3144,17 +6184,20 @@ export const schemaDict = {
     id: 'com.atproto.sync.notifyOfUpdate',
     defs: {
       main: {
-        type: 'query',
+        type: 'procedure',
         description:
           'Notify a crawling service of a recent update. Often when a long break between updates causes the connection with the crawling service to break.',
-        parameters: {
-          type: 'params',
-          required: ['hostname'],
-          properties: {
-            hostname: {
-              type: 'string',
-              description:
-                'Hostname of the service that is notifying of update.',
+        input: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['hostname'],
+            properties: {
+              hostname: {
+                type: 'string',
+                description:
+                  'Hostname of the service that is notifying of update.',
+              },
             },
           },
         },
@@ -3166,16 +6209,19 @@ export const schemaDict = {
     id: 'com.atproto.sync.requestCrawl',
     defs: {
       main: {
-        type: 'query',
+        type: 'procedure',
         description: 'Request a service to persistently crawl hosted repos.',
-        parameters: {
-          type: 'params',
-          required: ['hostname'],
-          properties: {
-            hostname: {
-              type: 'string',
-              description:
-                'Hostname of the service that is requesting to be crawled.',
+        input: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['hostname'],
+            properties: {
+              hostname: {
+                type: 'string',
+                description:
+                  'Hostname of the service that is requesting to be crawled.',
+              },
             },
           },
         },
@@ -3213,6 +6259,9 @@ export const schemaDict = {
         errors: [
           {
             name: 'FutureCursor',
+          },
+          {
+            name: 'ConsumerTooSlow',
           },
         ],
       },
@@ -3367,2814 +6416,65 @@ export const schemaDict = {
       },
     },
   },
-  AppBskyActorDefs: {
-    lexicon: 1,
-    id: 'app.bsky.actor.defs',
-    description: 'A reference to an actor in the network.',
-    defs: {
-      profileViewBasic: {
-        type: 'object',
-        required: ['did', 'handle'],
-        properties: {
-          did: {
-            type: 'string',
-            format: 'did',
-          },
-          handle: {
-            type: 'string',
-            format: 'handle',
-          },
-          displayName: {
-            type: 'string',
-            maxGraphemes: 64,
-            maxLength: 640,
-          },
-          avatar: {
-            type: 'string',
-          },
-          viewer: {
-            type: 'ref',
-            ref: 'lex:app.bsky.actor.defs#viewerState',
-          },
-          labels: {
-            type: 'array',
-            items: {
-              type: 'ref',
-              ref: 'lex:com.atproto.label.defs#label',
-            },
-          },
-        },
-      },
-      profileView: {
-        type: 'object',
-        required: ['did', 'handle'],
-        properties: {
-          did: {
-            type: 'string',
-            format: 'did',
-          },
-          handle: {
-            type: 'string',
-            format: 'handle',
-          },
-          displayName: {
-            type: 'string',
-            maxGraphemes: 64,
-            maxLength: 640,
-          },
-          description: {
-            type: 'string',
-            maxGraphemes: 256,
-            maxLength: 2560,
-          },
-          avatar: {
-            type: 'string',
-          },
-          indexedAt: {
-            type: 'string',
-            format: 'datetime',
-          },
-          viewer: {
-            type: 'ref',
-            ref: 'lex:app.bsky.actor.defs#viewerState',
-          },
-          labels: {
-            type: 'array',
-            items: {
-              type: 'ref',
-              ref: 'lex:com.atproto.label.defs#label',
-            },
-          },
-        },
-      },
-      profileViewDetailed: {
-        type: 'object',
-        required: ['did', 'handle'],
-        properties: {
-          did: {
-            type: 'string',
-            format: 'did',
-          },
-          handle: {
-            type: 'string',
-            format: 'handle',
-          },
-          displayName: {
-            type: 'string',
-            maxGraphemes: 64,
-            maxLength: 640,
-          },
-          description: {
-            type: 'string',
-            maxGraphemes: 256,
-            maxLength: 2560,
-          },
-          avatar: {
-            type: 'string',
-          },
-          banner: {
-            type: 'string',
-          },
-          followersCount: {
-            type: 'integer',
-          },
-          followsCount: {
-            type: 'integer',
-          },
-          postsCount: {
-            type: 'integer',
-          },
-          indexedAt: {
-            type: 'string',
-            format: 'datetime',
-          },
-          viewer: {
-            type: 'ref',
-            ref: 'lex:app.bsky.actor.defs#viewerState',
-          },
-          labels: {
-            type: 'array',
-            items: {
-              type: 'ref',
-              ref: 'lex:com.atproto.label.defs#label',
-            },
-          },
-        },
-      },
-      viewerState: {
-        type: 'object',
-        properties: {
-          muted: {
-            type: 'boolean',
-          },
-          mutedByList: {
-            type: 'ref',
-            ref: 'lex:app.bsky.graph.defs#listViewBasic',
-          },
-          blockedBy: {
-            type: 'boolean',
-          },
-          blocking: {
-            type: 'string',
-            format: 'at-uri',
-          },
-          following: {
-            type: 'string',
-            format: 'at-uri',
-          },
-          followedBy: {
-            type: 'string',
-            format: 'at-uri',
-          },
-        },
-      },
-      preferences: {
-        type: 'array',
-        items: {
-          type: 'union',
-          refs: [
-            'lex:app.bsky.actor.defs#adultContentPref',
-            'lex:app.bsky.actor.defs#contentLabelPref',
-          ],
-        },
-      },
-      adultContentPref: {
-        type: 'object',
-        required: ['enabled'],
-        properties: {
-          enabled: {
-            type: 'boolean',
-            default: false,
-          },
-        },
-      },
-      contentLabelPref: {
-        type: 'object',
-        required: ['label', 'visibility'],
-        properties: {
-          label: {
-            type: 'string',
-          },
-          visibility: {
-            type: 'string',
-            knownValues: ['show', 'warn', 'hide'],
-          },
-        },
-      },
-    },
-  },
-  AppBskyActorGetPreferences: {
-    lexicon: 1,
-    id: 'app.bsky.actor.getPreferences',
-    defs: {
-      main: {
-        type: 'query',
-        description: 'Get private preferences attached to the account.',
-        parameters: {
-          type: 'params',
-          properties: {},
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['preferences'],
-            properties: {
-              preferences: {
-                type: 'ref',
-                ref: 'lex:app.bsky.actor.defs#preferences',
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyActorGetProfile: {
-    lexicon: 1,
-    id: 'app.bsky.actor.getProfile',
-    defs: {
-      main: {
-        type: 'query',
-        parameters: {
-          type: 'params',
-          required: ['actor'],
-          properties: {
-            actor: {
-              type: 'string',
-              format: 'at-identifier',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'ref',
-            ref: 'lex:app.bsky.actor.defs#profileViewDetailed',
-          },
-        },
-      },
-    },
-  },
-  AppBskyActorGetProfiles: {
-    lexicon: 1,
-    id: 'app.bsky.actor.getProfiles',
-    defs: {
-      main: {
-        type: 'query',
-        parameters: {
-          type: 'params',
-          required: ['actors'],
-          properties: {
-            actors: {
-              type: 'array',
-              items: {
-                type: 'string',
-                format: 'at-identifier',
-              },
-              maxLength: 25,
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['profiles'],
-            properties: {
-              profiles: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.actor.defs#profileViewDetailed',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyActorGetSuggestions: {
-    lexicon: 1,
-    id: 'app.bsky.actor.getSuggestions',
-    defs: {
-      main: {
-        type: 'query',
-        description:
-          'Get a list of actors suggested for following. Used in discovery UIs.',
-        parameters: {
-          type: 'params',
-          properties: {
-            limit: {
-              type: 'integer',
-              minimum: 1,
-              maximum: 100,
-              default: 50,
-            },
-            cursor: {
-              type: 'string',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['actors'],
-            properties: {
-              cursor: {
-                type: 'string',
-              },
-              actors: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.actor.defs#profileView',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyActorProfile: {
-    lexicon: 1,
-    id: 'app.bsky.actor.profile',
-    defs: {
-      main: {
-        type: 'record',
-        key: 'literal:self',
-        record: {
-          type: 'object',
-          properties: {
-            displayName: {
-              type: 'string',
-              maxGraphemes: 64,
-              maxLength: 640,
-            },
-            description: {
-              type: 'string',
-              maxGraphemes: 256,
-              maxLength: 2560,
-            },
-            avatar: {
-              type: 'blob',
-              accept: ['image/png', 'image/jpeg'],
-              maxSize: 1000000,
-            },
-            banner: {
-              type: 'blob',
-              accept: ['image/png', 'image/jpeg'],
-              maxSize: 1000000,
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyActorPutPreferences: {
-    lexicon: 1,
-    id: 'app.bsky.actor.putPreferences',
-    defs: {
-      main: {
-        type: 'procedure',
-        description: 'Sets the private preferences attached to the account.',
-        input: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['preferences'],
-            properties: {
-              preferences: {
-                type: 'ref',
-                ref: 'lex:app.bsky.actor.defs#preferences',
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyActorSearchActors: {
-    lexicon: 1,
-    id: 'app.bsky.actor.searchActors',
-    defs: {
-      main: {
-        type: 'query',
-        description: 'Find actors matching search criteria.',
-        parameters: {
-          type: 'params',
-          properties: {
-            term: {
-              type: 'string',
-            },
-            limit: {
-              type: 'integer',
-              minimum: 1,
-              maximum: 100,
-              default: 50,
-            },
-            cursor: {
-              type: 'string',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['actors'],
-            properties: {
-              cursor: {
-                type: 'string',
-              },
-              actors: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.actor.defs#profileView',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyActorSearchActorsTypeahead: {
-    lexicon: 1,
-    id: 'app.bsky.actor.searchActorsTypeahead',
-    defs: {
-      main: {
-        type: 'query',
-        description: 'Find actor suggestions for a search term.',
-        parameters: {
-          type: 'params',
-          properties: {
-            term: {
-              type: 'string',
-            },
-            limit: {
-              type: 'integer',
-              minimum: 1,
-              maximum: 100,
-              default: 50,
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['actors'],
-            properties: {
-              actors: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.actor.defs#profileViewBasic',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyEmbedExternal: {
-    lexicon: 1,
-    id: 'app.bsky.embed.external',
-    description:
-      'A representation of some externally linked content, embedded in another form of content',
-    defs: {
-      main: {
-        type: 'object',
-        required: ['external'],
-        properties: {
-          external: {
-            type: 'ref',
-            ref: 'lex:app.bsky.embed.external#external',
-          },
-        },
-      },
-      external: {
-        type: 'object',
-        required: ['uri', 'title', 'description'],
-        properties: {
-          uri: {
-            type: 'string',
-            format: 'uri',
-          },
-          title: {
-            type: 'string',
-          },
-          description: {
-            type: 'string',
-          },
-          thumb: {
-            type: 'blob',
-            accept: ['image/*'],
-            maxSize: 1000000,
-          },
-        },
-      },
-      view: {
-        type: 'object',
-        required: ['external'],
-        properties: {
-          external: {
-            type: 'ref',
-            ref: 'lex:app.bsky.embed.external#viewExternal',
-          },
-        },
-      },
-      viewExternal: {
-        type: 'object',
-        required: ['uri', 'title', 'description'],
-        properties: {
-          uri: {
-            type: 'string',
-            format: 'uri',
-          },
-          title: {
-            type: 'string',
-          },
-          description: {
-            type: 'string',
-          },
-          thumb: {
-            type: 'string',
-          },
-        },
-      },
-    },
-  },
-  AppBskyEmbedImages: {
-    lexicon: 1,
-    id: 'app.bsky.embed.images',
-    description: 'A set of images embedded in some other form of content',
-    defs: {
-      main: {
-        type: 'object',
-        required: ['images'],
-        properties: {
-          images: {
-            type: 'array',
-            items: {
-              type: 'ref',
-              ref: 'lex:app.bsky.embed.images#image',
-            },
-            maxLength: 4,
-          },
-        },
-      },
-      image: {
-        type: 'object',
-        required: ['image', 'alt'],
-        properties: {
-          image: {
-            type: 'blob',
-            accept: ['image/*'],
-            maxSize: 1000000,
-          },
-          alt: {
-            type: 'string',
-          },
-        },
-      },
-      view: {
-        type: 'object',
-        required: ['images'],
-        properties: {
-          images: {
-            type: 'array',
-            items: {
-              type: 'ref',
-              ref: 'lex:app.bsky.embed.images#viewImage',
-            },
-            maxLength: 4,
-          },
-        },
-      },
-      viewImage: {
-        type: 'object',
-        required: ['thumb', 'fullsize', 'alt'],
-        properties: {
-          thumb: {
-            type: 'string',
-          },
-          fullsize: {
-            type: 'string',
-          },
-          alt: {
-            type: 'string',
-          },
-        },
-      },
-    },
-  },
-  AppBskyEmbedRecord: {
-    lexicon: 1,
-    id: 'app.bsky.embed.record',
-    description:
-      'A representation of a record embedded in another form of content',
-    defs: {
-      main: {
-        type: 'object',
-        required: ['record'],
-        properties: {
-          record: {
-            type: 'ref',
-            ref: 'lex:com.atproto.repo.strongRef',
-          },
-        },
-      },
-      view: {
-        type: 'object',
-        required: ['record'],
-        properties: {
-          record: {
-            type: 'union',
-            refs: [
-              'lex:app.bsky.embed.record#viewRecord',
-              'lex:app.bsky.embed.record#viewNotFound',
-              'lex:app.bsky.embed.record#viewBlocked',
-              'lex:app.bsky.feed.defs#generatorView',
-            ],
-          },
-        },
-      },
-      viewRecord: {
-        type: 'object',
-        required: ['uri', 'cid', 'author', 'value', 'indexedAt'],
-        properties: {
-          uri: {
-            type: 'string',
-            format: 'at-uri',
-          },
-          cid: {
-            type: 'string',
-            format: 'cid',
-          },
-          author: {
-            type: 'ref',
-            ref: 'lex:app.bsky.actor.defs#profileViewBasic',
-          },
-          value: {
-            type: 'unknown',
-          },
-          labels: {
-            type: 'array',
-            items: {
-              type: 'ref',
-              ref: 'lex:com.atproto.label.defs#label',
-            },
-          },
-          embeds: {
-            type: 'array',
-            items: {
-              type: 'union',
-              refs: [
-                'lex:app.bsky.embed.images#view',
-                'lex:app.bsky.embed.external#view',
-                'lex:app.bsky.embed.record#view',
-                'lex:app.bsky.embed.recordWithMedia#view',
-              ],
-            },
-          },
-          indexedAt: {
-            type: 'string',
-            format: 'datetime',
-          },
-        },
-      },
-      viewNotFound: {
-        type: 'object',
-        required: ['uri'],
-        properties: {
-          uri: {
-            type: 'string',
-            format: 'at-uri',
-          },
-        },
-      },
-      viewBlocked: {
-        type: 'object',
-        required: ['uri'],
-        properties: {
-          uri: {
-            type: 'string',
-            format: 'at-uri',
-          },
-        },
-      },
-    },
-  },
-  AppBskyEmbedRecordWithMedia: {
-    lexicon: 1,
-    id: 'app.bsky.embed.recordWithMedia',
-    description:
-      'A representation of a record embedded in another form of content, alongside other compatible embeds',
-    defs: {
-      main: {
-        type: 'object',
-        required: ['record', 'media'],
-        properties: {
-          record: {
-            type: 'ref',
-            ref: 'lex:app.bsky.embed.record',
-          },
-          media: {
-            type: 'union',
-            refs: ['lex:app.bsky.embed.images', 'lex:app.bsky.embed.external'],
-          },
-        },
-      },
-      view: {
-        type: 'object',
-        required: ['record', 'media'],
-        properties: {
-          record: {
-            type: 'ref',
-            ref: 'lex:app.bsky.embed.record#view',
-          },
-          media: {
-            type: 'union',
-            refs: [
-              'lex:app.bsky.embed.images#view',
-              'lex:app.bsky.embed.external#view',
-            ],
-          },
-        },
-      },
-    },
-  },
-  AppBskyFeedDefs: {
-    lexicon: 1,
-    id: 'app.bsky.feed.defs',
-    defs: {
-      postView: {
-        type: 'object',
-        required: ['uri', 'cid', 'author', 'record', 'indexedAt'],
-        properties: {
-          uri: {
-            type: 'string',
-            format: 'at-uri',
-          },
-          cid: {
-            type: 'string',
-            format: 'cid',
-          },
-          author: {
-            type: 'ref',
-            ref: 'lex:app.bsky.actor.defs#profileViewBasic',
-          },
-          record: {
-            type: 'unknown',
-          },
-          embed: {
-            type: 'union',
-            refs: [
-              'lex:app.bsky.embed.images#view',
-              'lex:app.bsky.embed.external#view',
-              'lex:app.bsky.embed.record#view',
-              'lex:app.bsky.embed.recordWithMedia#view',
-            ],
-          },
-          replyCount: {
-            type: 'integer',
-          },
-          repostCount: {
-            type: 'integer',
-          },
-          likeCount: {
-            type: 'integer',
-          },
-          indexedAt: {
-            type: 'string',
-            format: 'datetime',
-          },
-          viewer: {
-            type: 'ref',
-            ref: 'lex:app.bsky.feed.defs#viewerState',
-          },
-          labels: {
-            type: 'array',
-            items: {
-              type: 'ref',
-              ref: 'lex:com.atproto.label.defs#label',
-            },
-          },
-        },
-      },
-      viewerState: {
-        type: 'object',
-        properties: {
-          repost: {
-            type: 'string',
-            format: 'at-uri',
-          },
-          like: {
-            type: 'string',
-            format: 'at-uri',
-          },
-        },
-      },
-      feedViewPost: {
-        type: 'object',
-        required: ['post'],
-        properties: {
-          post: {
-            type: 'ref',
-            ref: 'lex:app.bsky.feed.defs#postView',
-          },
-          reply: {
-            type: 'ref',
-            ref: 'lex:app.bsky.feed.defs#replyRef',
-          },
-          reason: {
-            type: 'union',
-            refs: ['lex:app.bsky.feed.defs#reasonRepost'],
-          },
-        },
-      },
-      replyRef: {
-        type: 'object',
-        required: ['root', 'parent'],
-        properties: {
-          root: {
-            type: 'union',
-            refs: [
-              'lex:app.bsky.feed.defs#postView',
-              'lex:app.bsky.feed.defs#notFoundPost',
-              'lex:app.bsky.feed.defs#blockedPost',
-            ],
-          },
-          parent: {
-            type: 'union',
-            refs: [
-              'lex:app.bsky.feed.defs#postView',
-              'lex:app.bsky.feed.defs#notFoundPost',
-              'lex:app.bsky.feed.defs#blockedPost',
-            ],
-          },
-        },
-      },
-      reasonRepost: {
-        type: 'object',
-        required: ['by', 'indexedAt'],
-        properties: {
-          by: {
-            type: 'ref',
-            ref: 'lex:app.bsky.actor.defs#profileViewBasic',
-          },
-          indexedAt: {
-            type: 'string',
-            format: 'datetime',
-          },
-        },
-      },
-      threadViewPost: {
-        type: 'object',
-        required: ['post'],
-        properties: {
-          post: {
-            type: 'ref',
-            ref: 'lex:app.bsky.feed.defs#postView',
-          },
-          parent: {
-            type: 'union',
-            refs: [
-              'lex:app.bsky.feed.defs#threadViewPost',
-              'lex:app.bsky.feed.defs#notFoundPost',
-              'lex:app.bsky.feed.defs#blockedPost',
-            ],
-          },
-          replies: {
-            type: 'array',
-            items: {
-              type: 'union',
-              refs: [
-                'lex:app.bsky.feed.defs#threadViewPost',
-                'lex:app.bsky.feed.defs#notFoundPost',
-                'lex:app.bsky.feed.defs#blockedPost',
-              ],
-            },
-          },
-        },
-      },
-      notFoundPost: {
-        type: 'object',
-        required: ['uri', 'notFound'],
-        properties: {
-          uri: {
-            type: 'string',
-            format: 'at-uri',
-          },
-          notFound: {
-            type: 'boolean',
-            const: true,
-          },
-        },
-      },
-      blockedPost: {
-        type: 'object',
-        required: ['uri', 'blocked'],
-        properties: {
-          uri: {
-            type: 'string',
-            format: 'at-uri',
-          },
-          blocked: {
-            type: 'boolean',
-            const: true,
-          },
-        },
-      },
-      generatorView: {
-        type: 'object',
-        required: ['uri', 'cid', 'creator', 'indexedAt'],
-        properties: {
-          uri: {
-            type: 'string',
-            format: 'at-uri',
-          },
-          cid: {
-            type: 'string',
-            format: 'cid',
-          },
-          did: {
-            type: 'string',
-            format: 'did',
-          },
-          creator: {
-            type: 'ref',
-            ref: 'lex:app.bsky.actor.defs#profileView',
-          },
-          displayName: {
-            type: 'string',
-          },
-          description: {
-            type: 'string',
-            maxGraphemes: 300,
-            maxLength: 3000,
-          },
-          descriptionFacets: {
-            type: 'array',
-            items: {
-              type: 'ref',
-              ref: 'lex:app.bsky.richtext.facet',
-            },
-          },
-          avatar: {
-            type: 'string',
-          },
-          likeCount: {
-            type: 'integer',
-            minimum: 0,
-          },
-          viewer: {
-            type: 'ref',
-            ref: 'lex:app.bsky.feed.defs#generatorViewerState',
-          },
-          indexedAt: {
-            type: 'string',
-            format: 'datetime',
-          },
-        },
-      },
-      generatorViewerState: {
-        type: 'object',
-        properties: {
-          saved: {
-            type: 'boolean',
-          },
-          like: {
-            type: 'string',
-            format: 'at-uri',
-          },
-        },
-      },
-      skeletonFeedPost: {
-        type: 'object',
-        required: ['post'],
-        properties: {
-          post: {
-            type: 'string',
-            format: 'at-uri',
-          },
-          reason: {
-            type: 'union',
-            refs: ['lex:app.bsky.feed.defs#skeletonReasonRepost'],
-          },
-        },
-      },
-      skeletonReasonRepost: {
-        type: 'object',
-        required: ['repost'],
-        properties: {
-          repost: {
-            type: 'string',
-            ref: 'at-uri',
-          },
-        },
-      },
-    },
-  },
-  AppBskyFeedDescribeFeedGenerator: {
-    lexicon: 1,
-    id: 'app.bsky.feed.describeFeedGenerator',
-    defs: {
-      main: {
-        type: 'query',
-        description:
-          'Returns information about a given feed generator including TOS & offered feed URIs',
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['did', 'feeds'],
-            properties: {
-              did: {
-                type: 'string',
-                format: 'did',
-              },
-              feeds: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.feed.describeFeedGenerator#feed',
-                },
-              },
-              links: {
-                type: 'ref',
-                ref: 'lex:app.bsky.feed.describeFeedGenerator#links',
-              },
-            },
-          },
-        },
-      },
-      feed: {
-        type: 'object',
-        required: ['uri'],
-        properties: {
-          uri: {
-            type: 'string',
-            format: 'at-uri',
-          },
-        },
-      },
-      links: {
-        type: 'object',
-        properties: {
-          privacyPolicy: {
-            type: 'string',
-          },
-          termsOfService: {
-            type: 'string',
-          },
-        },
-      },
-    },
-  },
-  AppBskyFeedGenerator: {
-    lexicon: 1,
-    id: 'app.bsky.feed.generator',
-    defs: {
-      main: {
-        type: 'record',
-        description: 'A declaration of the existence of a feed generator',
-        key: 'any',
-        record: {
-          type: 'object',
-          required: ['did', 'createdAt'],
-          properties: {
-            did: {
-              type: 'string',
-              format: 'did',
-            },
-            displayName: {
-              type: 'string',
-              maxGraphemes: 64,
-              maxLength: 640,
-            },
-            description: {
-              type: 'string',
-              maxGraphemes: 300,
-              maxLength: 3000,
-            },
-            descriptionFacets: {
-              type: 'array',
-              items: {
-                type: 'ref',
-                ref: 'lex:app.bsky.richtext.facet',
-              },
-            },
-            avatar: {
-              type: 'blob',
-              accept: ['image/png', 'image/jpeg'],
-              maxSize: 1000000,
-            },
-            createdAt: {
-              type: 'string',
-              format: 'datetime',
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyFeedGetActorFeeds: {
-    lexicon: 1,
-    id: 'app.bsky.feed.getActorFeeds',
-    defs: {
-      main: {
-        type: 'query',
-        description: 'Retrieve a list of feeds created by a given actor',
-        parameters: {
-          type: 'params',
-          required: ['actor'],
-          properties: {
-            actor: {
-              type: 'string',
-              format: 'at-identifier',
-            },
-            limit: {
-              type: 'integer',
-              minimum: 1,
-              maximum: 100,
-              default: 50,
-            },
-            cursor: {
-              type: 'string',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['feeds'],
-            properties: {
-              cursor: {
-                type: 'string',
-              },
-              feeds: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.feed.defs#generatorView',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyFeedGetAuthorFeed: {
-    lexicon: 1,
-    id: 'app.bsky.feed.getAuthorFeed',
-    defs: {
-      main: {
-        type: 'query',
-        description: "A view of an actor's feed.",
-        parameters: {
-          type: 'params',
-          required: ['actor'],
-          properties: {
-            actor: {
-              type: 'string',
-              format: 'at-identifier',
-            },
-            limit: {
-              type: 'integer',
-              minimum: 1,
-              maximum: 100,
-              default: 50,
-            },
-            cursor: {
-              type: 'string',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['feed'],
-            properties: {
-              cursor: {
-                type: 'string',
-              },
-              feed: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.feed.defs#feedViewPost',
-                },
-              },
-            },
-          },
-        },
-        errors: [
-          {
-            name: 'BlockedActor',
-          },
-          {
-            name: 'BlockedByActor',
-          },
-        ],
-      },
-    },
-  },
-  AppBskyFeedGetFeed: {
-    lexicon: 1,
-    id: 'app.bsky.feed.getFeed',
-    defs: {
-      main: {
-        type: 'query',
-        description:
-          "Compose and hydrate a feed from a user's selected feed generator",
-        parameters: {
-          type: 'params',
-          required: ['feed'],
-          properties: {
-            feed: {
-              type: 'string',
-              format: 'at-uri',
-            },
-            limit: {
-              type: 'integer',
-              minimum: 1,
-              maximum: 100,
-              default: 50,
-            },
-            cursor: {
-              type: 'string',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['feed'],
-            properties: {
-              cursor: {
-                type: 'string',
-              },
-              feed: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.feed.defs#feedViewPost',
-                },
-              },
-            },
-          },
-        },
-        errors: [
-          {
-            name: 'UnknownFeed',
-          },
-        ],
-      },
-    },
-  },
-  AppBskyFeedGetFeedGenerator: {
-    lexicon: 1,
-    id: 'app.bsky.feed.getFeedGenerator',
-    defs: {
-      main: {
-        type: 'query',
-        description:
-          'Get information about a specific feed offered by a feed generator, such as its online status',
-        parameters: {
-          type: 'params',
-          required: ['feed'],
-          properties: {
-            feed: {
-              type: 'string',
-              format: 'at-uri',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['view', 'isOnline', 'isValid'],
-            properties: {
-              view: {
-                type: 'ref',
-                ref: 'lex:app.bsky.feed.defs#generatorView',
-              },
-              isOnline: {
-                type: 'boolean',
-              },
-              isValid: {
-                type: 'boolean',
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyFeedGetFeedSkeleton: {
-    lexicon: 1,
-    id: 'app.bsky.feed.getFeedSkeleton',
-    defs: {
-      main: {
-        type: 'query',
-        description: 'A skeleton of a feed provided by a feed generator',
-        parameters: {
-          type: 'params',
-          required: ['feed'],
-          properties: {
-            feed: {
-              type: 'string',
-              format: 'at-uri',
-            },
-            limit: {
-              type: 'integer',
-              minimum: 1,
-              maximum: 100,
-              default: 50,
-            },
-            cursor: {
-              type: 'string',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['feed'],
-            properties: {
-              cursor: {
-                type: 'string',
-              },
-              feed: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.feed.defs#skeletonFeedPost',
-                },
-              },
-            },
-          },
-        },
-        errors: [
-          {
-            name: 'UnknownFeed',
-          },
-        ],
-      },
-    },
-  },
-  AppBskyFeedGetLikes: {
-    lexicon: 1,
-    id: 'app.bsky.feed.getLikes',
-    defs: {
-      main: {
-        type: 'query',
-        parameters: {
-          type: 'params',
-          required: ['uri'],
-          properties: {
-            uri: {
-              type: 'string',
-              format: 'at-uri',
-            },
-            cid: {
-              type: 'string',
-              format: 'cid',
-            },
-            limit: {
-              type: 'integer',
-              minimum: 1,
-              maximum: 100,
-              default: 50,
-            },
-            cursor: {
-              type: 'string',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['uri', 'likes'],
-            properties: {
-              uri: {
-                type: 'string',
-                format: 'at-uri',
-              },
-              cid: {
-                type: 'string',
-                format: 'cid',
-              },
-              cursor: {
-                type: 'string',
-              },
-              likes: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.feed.getLikes#like',
-                },
-              },
-            },
-          },
-        },
-      },
-      like: {
-        type: 'object',
-        required: ['indexedAt', 'createdAt', 'actor'],
-        properties: {
-          indexedAt: {
-            type: 'string',
-            format: 'datetime',
-          },
-          createdAt: {
-            type: 'string',
-            format: 'datetime',
-          },
-          actor: {
-            type: 'ref',
-            ref: 'lex:app.bsky.actor.defs#profileView',
-          },
-        },
-      },
-    },
-  },
-  AppBskyFeedGetPostThread: {
-    lexicon: 1,
-    id: 'app.bsky.feed.getPostThread',
-    defs: {
-      main: {
-        type: 'query',
-        parameters: {
-          type: 'params',
-          required: ['uri'],
-          properties: {
-            uri: {
-              type: 'string',
-              format: 'at-uri',
-            },
-            depth: {
-              type: 'integer',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['thread'],
-            properties: {
-              thread: {
-                type: 'union',
-                refs: [
-                  'lex:app.bsky.feed.defs#threadViewPost',
-                  'lex:app.bsky.feed.defs#notFoundPost',
-                  'lex:app.bsky.feed.defs#blockedPost',
-                ],
-              },
-            },
-          },
-        },
-        errors: [
-          {
-            name: 'NotFound',
-          },
-        ],
-      },
-    },
-  },
-  AppBskyFeedGetPosts: {
-    lexicon: 1,
-    id: 'app.bsky.feed.getPosts',
-    defs: {
-      main: {
-        type: 'query',
-        description: "A view of an actor's feed.",
-        parameters: {
-          type: 'params',
-          required: ['uris'],
-          properties: {
-            uris: {
-              type: 'array',
-              items: {
-                type: 'string',
-                format: 'at-uri',
-              },
-              maxLength: 25,
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['posts'],
-            properties: {
-              posts: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.feed.defs#postView',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyFeedGetRepostedBy: {
-    lexicon: 1,
-    id: 'app.bsky.feed.getRepostedBy',
-    defs: {
-      main: {
-        type: 'query',
-        parameters: {
-          type: 'params',
-          required: ['uri'],
-          properties: {
-            uri: {
-              type: 'string',
-              format: 'at-uri',
-            },
-            cid: {
-              type: 'string',
-              format: 'cid',
-            },
-            limit: {
-              type: 'integer',
-              minimum: 1,
-              maximum: 100,
-              default: 50,
-            },
-            cursor: {
-              type: 'string',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['uri', 'repostedBy'],
-            properties: {
-              uri: {
-                type: 'string',
-                format: 'at-uri',
-              },
-              cid: {
-                type: 'string',
-                format: 'cid',
-              },
-              cursor: {
-                type: 'string',
-              },
-              repostedBy: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.actor.defs#profileView',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyFeedGetSavedFeeds: {
-    lexicon: 1,
-    id: 'app.bsky.feed.getSavedFeeds',
-    defs: {
-      main: {
-        type: 'query',
-        description: "Retrieve a list of the authenticated user's saved feeds",
-        parameters: {
-          type: 'params',
-          properties: {
-            limit: {
-              type: 'integer',
-              minimum: 1,
-              maximum: 100,
-              default: 50,
-            },
-            cursor: {
-              type: 'string',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['feeds'],
-            properties: {
-              cursor: {
-                type: 'string',
-              },
-              feeds: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.feed.defs#generatorView',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyFeedGetTimeline: {
-    lexicon: 1,
-    id: 'app.bsky.feed.getTimeline',
-    defs: {
-      main: {
-        type: 'query',
-        description: "A view of the user's home timeline.",
-        parameters: {
-          type: 'params',
-          properties: {
-            algorithm: {
-              type: 'string',
-            },
-            limit: {
-              type: 'integer',
-              minimum: 1,
-              maximum: 100,
-              default: 50,
-            },
-            cursor: {
-              type: 'string',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['feed'],
-            properties: {
-              cursor: {
-                type: 'string',
-              },
-              feed: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.feed.defs#feedViewPost',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyFeedLike: {
-    lexicon: 1,
-    id: 'app.bsky.feed.like',
-    defs: {
-      main: {
-        type: 'record',
-        key: 'tid',
-        record: {
-          type: 'object',
-          required: ['subject', 'createdAt'],
-          properties: {
-            subject: {
-              type: 'ref',
-              ref: 'lex:com.atproto.repo.strongRef',
-            },
-            createdAt: {
-              type: 'string',
-              format: 'datetime',
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyFeedPost: {
-    lexicon: 1,
-    id: 'app.bsky.feed.post',
-    defs: {
-      main: {
-        type: 'record',
-        key: 'tid',
-        record: {
-          type: 'object',
-          required: ['text', 'createdAt'],
-          properties: {
-            text: {
-              type: 'string',
-              maxLength: 3000,
-              maxGraphemes: 300,
-            },
-            entities: {
-              type: 'array',
-              description: 'Deprecated: replaced by app.bsky.richtext.facet.',
-              items: {
-                type: 'ref',
-                ref: 'lex:app.bsky.feed.post#entity',
-              },
-            },
-            facets: {
-              type: 'array',
-              items: {
-                type: 'ref',
-                ref: 'lex:app.bsky.richtext.facet',
-              },
-            },
-            reply: {
-              type: 'ref',
-              ref: 'lex:app.bsky.feed.post#replyRef',
-            },
-            embed: {
-              type: 'union',
-              refs: [
-                'lex:app.bsky.embed.images',
-                'lex:app.bsky.embed.external',
-                'lex:app.bsky.embed.record',
-                'lex:app.bsky.embed.recordWithMedia',
-              ],
-            },
-            createdAt: {
-              type: 'string',
-              format: 'datetime',
-            },
-          },
-        },
-      },
-      replyRef: {
-        type: 'object',
-        required: ['root', 'parent'],
-        properties: {
-          root: {
-            type: 'ref',
-            ref: 'lex:com.atproto.repo.strongRef',
-          },
-          parent: {
-            type: 'ref',
-            ref: 'lex:com.atproto.repo.strongRef',
-          },
-        },
-      },
-      entity: {
-        type: 'object',
-        description: 'Deprecated: use facets instead.',
-        required: ['index', 'type', 'value'],
-        properties: {
-          index: {
-            type: 'ref',
-            ref: 'lex:app.bsky.feed.post#textSlice',
-          },
-          type: {
-            type: 'string',
-            description: "Expected values are 'mention' and 'link'.",
-          },
-          value: {
-            type: 'string',
-          },
-        },
-      },
-      textSlice: {
-        type: 'object',
-        description:
-          'Deprecated. Use app.bsky.richtext instead -- A text segment. Start is inclusive, end is exclusive. Indices are for utf16-encoded strings.',
-        required: ['start', 'end'],
-        properties: {
-          start: {
-            type: 'integer',
-            minimum: 0,
-          },
-          end: {
-            type: 'integer',
-            minimum: 0,
-          },
-        },
-      },
-    },
-  },
-  AppBskyFeedRepost: {
-    lexicon: 1,
-    id: 'app.bsky.feed.repost',
-    defs: {
-      main: {
-        type: 'record',
-        key: 'tid',
-        record: {
-          type: 'object',
-          required: ['subject', 'createdAt'],
-          properties: {
-            subject: {
-              type: 'ref',
-              ref: 'lex:com.atproto.repo.strongRef',
-            },
-            createdAt: {
-              type: 'string',
-              format: 'datetime',
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyFeedSaveFeed: {
-    lexicon: 1,
-    id: 'app.bsky.feed.saveFeed',
-    defs: {
-      main: {
-        type: 'procedure',
-        description: 'Save a 3rd party feed for use across clients',
-        input: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['feed'],
-            properties: {
-              feed: {
-                type: 'string',
-                format: 'at-uri',
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyFeedUnsaveFeed: {
-    lexicon: 1,
-    id: 'app.bsky.feed.unsaveFeed',
-    defs: {
-      main: {
-        type: 'procedure',
-        description: 'Unsave a 3rd party feed',
-        input: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['feed'],
-            properties: {
-              feed: {
-                type: 'string',
-                format: 'at-uri',
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyGraphBlock: {
-    lexicon: 1,
-    id: 'app.bsky.graph.block',
-    defs: {
-      main: {
-        type: 'record',
-        description: 'A block.',
-        key: 'tid',
-        record: {
-          type: 'object',
-          required: ['subject', 'createdAt'],
-          properties: {
-            subject: {
-              type: 'string',
-              format: 'did',
-            },
-            createdAt: {
-              type: 'string',
-              format: 'datetime',
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyGraphDefs: {
-    lexicon: 1,
-    id: 'app.bsky.graph.defs',
-    defs: {
-      listViewBasic: {
-        type: 'object',
-        required: ['uri', 'creator', 'name', 'purpose'],
-        properties: {
-          uri: {
-            type: 'string',
-            format: 'at-uri',
-          },
-          name: {
-            type: 'string',
-            maxLength: 64,
-            minLength: 1,
-          },
-          purpose: {
-            type: 'ref',
-            ref: 'lex:app.bsky.graph.defs#listPurpose',
-          },
-          avatar: {
-            type: 'string',
-          },
-          viewer: {
-            type: 'ref',
-            ref: 'lex:app.bsky.graph.defs#listViewerState',
-          },
-          indexedAt: {
-            type: 'string',
-            format: 'datetime',
-          },
-        },
-      },
-      listView: {
-        type: 'object',
-        required: ['uri', 'creator', 'name', 'purpose', 'indexedAt'],
-        properties: {
-          uri: {
-            type: 'string',
-            format: 'at-uri',
-          },
-          creator: {
-            type: 'ref',
-            ref: 'lex:app.bsky.actor.defs#profileView',
-          },
-          name: {
-            type: 'string',
-            maxLength: 64,
-            minLength: 1,
-          },
-          purpose: {
-            type: 'ref',
-            ref: 'lex:app.bsky.graph.defs#listPurpose',
-          },
-          description: {
-            type: 'string',
-            maxGraphemes: 300,
-            maxLength: 3000,
-          },
-          descriptionFacets: {
-            type: 'array',
-            items: {
-              type: 'ref',
-              ref: 'lex:app.bsky.richtext.facet',
-            },
-          },
-          avatar: {
-            type: 'string',
-          },
-          viewer: {
-            type: 'ref',
-            ref: 'lex:app.bsky.graph.defs#listViewerState',
-          },
-          indexedAt: {
-            type: 'string',
-            format: 'datetime',
-          },
-        },
-      },
-      listItemView: {
-        type: 'object',
-        required: ['subject'],
-        properties: {
-          subject: {
-            type: 'ref',
-            ref: 'lex:app.bsky.actor.defs#profileView',
-          },
-        },
-      },
-      listPurpose: {
-        type: 'string',
-        knownValues: ['app.bsky.graph.defs#modlist'],
-      },
-      modlist: {
-        type: 'token',
-        description:
-          'A list of actors to apply an aggregate moderation action (mute/block) on',
-      },
-      listViewerState: {
-        type: 'object',
-        properties: {
-          muted: {
-            type: 'boolean',
-          },
-        },
-      },
-    },
-  },
-  AppBskyGraphFollow: {
-    lexicon: 1,
-    id: 'app.bsky.graph.follow',
-    defs: {
-      main: {
-        type: 'record',
-        description: 'A social follow.',
-        key: 'tid',
-        record: {
-          type: 'object',
-          required: ['subject', 'createdAt'],
-          properties: {
-            subject: {
-              type: 'string',
-              format: 'did',
-            },
-            createdAt: {
-              type: 'string',
-              format: 'datetime',
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyGraphGetBlocks: {
-    lexicon: 1,
-    id: 'app.bsky.graph.getBlocks',
-    defs: {
-      main: {
-        type: 'query',
-        description: "Who is the requester's account blocking?",
-        parameters: {
-          type: 'params',
-          properties: {
-            limit: {
-              type: 'integer',
-              minimum: 1,
-              maximum: 100,
-              default: 50,
-            },
-            cursor: {
-              type: 'string',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['blocks'],
-            properties: {
-              cursor: {
-                type: 'string',
-              },
-              blocks: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.actor.defs#profileView',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyGraphGetFollowers: {
-    lexicon: 1,
-    id: 'app.bsky.graph.getFollowers',
-    defs: {
-      main: {
-        type: 'query',
-        description: 'Who is following an actor?',
-        parameters: {
-          type: 'params',
-          required: ['actor'],
-          properties: {
-            actor: {
-              type: 'string',
-              format: 'at-identifier',
-            },
-            limit: {
-              type: 'integer',
-              minimum: 1,
-              maximum: 100,
-              default: 50,
-            },
-            cursor: {
-              type: 'string',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['subject', 'followers'],
-            properties: {
-              subject: {
-                type: 'ref',
-                ref: 'lex:app.bsky.actor.defs#profileView',
-              },
-              cursor: {
-                type: 'string',
-              },
-              followers: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.actor.defs#profileView',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyGraphGetFollows: {
-    lexicon: 1,
-    id: 'app.bsky.graph.getFollows',
-    defs: {
-      main: {
-        type: 'query',
-        description: 'Who is an actor following?',
-        parameters: {
-          type: 'params',
-          required: ['actor'],
-          properties: {
-            actor: {
-              type: 'string',
-              format: 'at-identifier',
-            },
-            limit: {
-              type: 'integer',
-              minimum: 1,
-              maximum: 100,
-              default: 50,
-            },
-            cursor: {
-              type: 'string',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['subject', 'follows'],
-            properties: {
-              subject: {
-                type: 'ref',
-                ref: 'lex:app.bsky.actor.defs#profileView',
-              },
-              cursor: {
-                type: 'string',
-              },
-              follows: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.actor.defs#profileView',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyGraphGetList: {
-    lexicon: 1,
-    id: 'app.bsky.graph.getList',
-    defs: {
-      main: {
-        type: 'query',
-        description: 'Fetch a list of actors',
-        parameters: {
-          type: 'params',
-          required: ['list'],
-          properties: {
-            list: {
-              type: 'string',
-              format: 'at-uri',
-            },
-            limit: {
-              type: 'integer',
-              minimum: 1,
-              maximum: 100,
-              default: 50,
-            },
-            cursor: {
-              type: 'string',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['list', 'items'],
-            properties: {
-              cursor: {
-                type: 'string',
-              },
-              list: {
-                type: 'ref',
-                ref: 'lex:app.bsky.graph.defs#listView',
-              },
-              items: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.graph.defs#listItemView',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyGraphGetListMutes: {
-    lexicon: 1,
-    id: 'app.bsky.graph.getListMutes',
-    defs: {
-      main: {
-        type: 'query',
-        description: "Which lists is the requester's account muting?",
-        parameters: {
-          type: 'params',
-          properties: {
-            limit: {
-              type: 'integer',
-              minimum: 1,
-              maximum: 100,
-              default: 50,
-            },
-            cursor: {
-              type: 'string',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['lists'],
-            properties: {
-              cursor: {
-                type: 'string',
-              },
-              lists: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.graph.defs#listView',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyGraphGetLists: {
-    lexicon: 1,
-    id: 'app.bsky.graph.getLists',
-    defs: {
-      main: {
-        type: 'query',
-        description: 'Fetch a list of lists that belong to an actor',
-        parameters: {
-          type: 'params',
-          required: ['actor'],
-          properties: {
-            actor: {
-              type: 'string',
-              format: 'at-identifier',
-            },
-            limit: {
-              type: 'integer',
-              minimum: 1,
-              maximum: 100,
-              default: 50,
-            },
-            cursor: {
-              type: 'string',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['lists'],
-            properties: {
-              cursor: {
-                type: 'string',
-              },
-              lists: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.graph.defs#listView',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyGraphGetMutes: {
-    lexicon: 1,
-    id: 'app.bsky.graph.getMutes',
-    defs: {
-      main: {
-        type: 'query',
-        description: 'Who does the viewer mute?',
-        parameters: {
-          type: 'params',
-          properties: {
-            limit: {
-              type: 'integer',
-              minimum: 1,
-              maximum: 100,
-              default: 50,
-            },
-            cursor: {
-              type: 'string',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['mutes'],
-            properties: {
-              cursor: {
-                type: 'string',
-              },
-              mutes: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.actor.defs#profileView',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyGraphList: {
-    lexicon: 1,
-    id: 'app.bsky.graph.list',
-    defs: {
-      main: {
-        type: 'record',
-        description: 'A declaration of a list of actors.',
-        key: 'tid',
-        record: {
-          type: 'object',
-          required: ['name', 'purpose', 'createdAt'],
-          properties: {
-            purpose: {
-              type: 'ref',
-              ref: 'lex:app.bsky.graph.defs#listPurpose',
-            },
-            name: {
-              type: 'string',
-              maxLength: 64,
-              minLength: 1,
-            },
-            description: {
-              type: 'string',
-              maxGraphemes: 300,
-              maxLength: 3000,
-            },
-            descriptionFacets: {
-              type: 'array',
-              items: {
-                type: 'ref',
-                ref: 'lex:app.bsky.richtext.facet',
-              },
-            },
-            avatar: {
-              type: 'blob',
-              accept: ['image/png', 'image/jpeg'],
-              maxSize: 1000000,
-            },
-            createdAt: {
-              type: 'string',
-              format: 'datetime',
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyGraphListitem: {
-    lexicon: 1,
-    id: 'app.bsky.graph.listitem',
-    defs: {
-      main: {
-        type: 'record',
-        description: 'An item under a declared list of actors',
-        key: 'tid',
-        record: {
-          type: 'object',
-          required: ['subject', 'list', 'createdAt'],
-          properties: {
-            subject: {
-              type: 'string',
-              format: 'did',
-            },
-            list: {
-              type: 'string',
-              format: 'at-uri',
-            },
-            createdAt: {
-              type: 'string',
-              format: 'datetime',
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyGraphMuteActor: {
-    lexicon: 1,
-    id: 'app.bsky.graph.muteActor',
-    defs: {
-      main: {
-        type: 'procedure',
-        description: 'Mute an actor by did or handle.',
-        input: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['actor'],
-            properties: {
-              actor: {
-                type: 'string',
-                format: 'at-identifier',
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyGraphMuteActorList: {
-    lexicon: 1,
-    id: 'app.bsky.graph.muteActorList',
-    defs: {
-      main: {
-        type: 'procedure',
-        description: 'Mute a list of actors.',
-        input: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['list'],
-            properties: {
-              list: {
-                type: 'string',
-                format: 'at-uri',
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyGraphUnmuteActor: {
-    lexicon: 1,
-    id: 'app.bsky.graph.unmuteActor',
-    defs: {
-      main: {
-        type: 'procedure',
-        description: 'Unmute an actor by did or handle.',
-        input: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['actor'],
-            properties: {
-              actor: {
-                type: 'string',
-                format: 'at-identifier',
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyGraphUnmuteActorList: {
-    lexicon: 1,
-    id: 'app.bsky.graph.unmuteActorList',
-    defs: {
-      main: {
-        type: 'procedure',
-        description: 'Unmute a list of actors.',
-        input: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['list'],
-            properties: {
-              list: {
-                type: 'string',
-                format: 'at-uri',
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyNotificationGetUnreadCount: {
-    lexicon: 1,
-    id: 'app.bsky.notification.getUnreadCount',
-    defs: {
-      main: {
-        type: 'query',
-        parameters: {
-          type: 'params',
-          properties: {
-            seenAt: {
-              type: 'string',
-              format: 'datetime',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['count'],
-            properties: {
-              count: {
-                type: 'integer',
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyNotificationListNotifications: {
-    lexicon: 1,
-    id: 'app.bsky.notification.listNotifications',
-    defs: {
-      main: {
-        type: 'query',
-        parameters: {
-          type: 'params',
-          properties: {
-            limit: {
-              type: 'integer',
-              minimum: 1,
-              maximum: 100,
-              default: 50,
-            },
-            cursor: {
-              type: 'string',
-            },
-            seenAt: {
-              type: 'string',
-              format: 'datetime',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['notifications'],
-            properties: {
-              cursor: {
-                type: 'string',
-              },
-              notifications: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.notification.listNotifications#notification',
-                },
-              },
-            },
-          },
-        },
-      },
-      notification: {
-        type: 'object',
-        required: [
-          'uri',
-          'cid',
-          'author',
-          'reason',
-          'record',
-          'isRead',
-          'indexedAt',
-        ],
-        properties: {
-          uri: {
-            type: 'string',
-            format: 'at-uri',
-          },
-          cid: {
-            type: 'string',
-            format: 'cid',
-          },
-          author: {
-            type: 'ref',
-            ref: 'lex:app.bsky.actor.defs#profileView',
-          },
-          reason: {
-            type: 'string',
-            description:
-              "Expected values are 'like', 'repost', 'follow', 'mention', 'reply', and 'quote'.",
-            knownValues: [
-              'like',
-              'repost',
-              'follow',
-              'mention',
-              'reply',
-              'quote',
-            ],
-          },
-          reasonSubject: {
-            type: 'string',
-            format: 'at-uri',
-          },
-          record: {
-            type: 'unknown',
-          },
-          isRead: {
-            type: 'boolean',
-          },
-          indexedAt: {
-            type: 'string',
-            format: 'datetime',
-          },
-          labels: {
-            type: 'array',
-            items: {
-              type: 'ref',
-              ref: 'lex:com.atproto.label.defs#label',
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyNotificationUpdateSeen: {
-    lexicon: 1,
-    id: 'app.bsky.notification.updateSeen',
-    defs: {
-      main: {
-        type: 'procedure',
-        description: 'Notify server that the user has seen notifications.',
-        input: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['seenAt'],
-            properties: {
-              seenAt: {
-                type: 'string',
-                format: 'datetime',
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  AppBskyRichtextFacet: {
-    lexicon: 1,
-    id: 'app.bsky.richtext.facet',
-    defs: {
-      main: {
-        type: 'object',
-        required: ['index', 'features'],
-        properties: {
-          index: {
-            type: 'ref',
-            ref: 'lex:app.bsky.richtext.facet#byteSlice',
-          },
-          features: {
-            type: 'array',
-            items: {
-              type: 'union',
-              refs: [
-                'lex:app.bsky.richtext.facet#mention',
-                'lex:app.bsky.richtext.facet#link',
-              ],
-            },
-          },
-        },
-      },
-      mention: {
-        type: 'object',
-        description: 'A facet feature for actor mentions.',
-        required: ['did'],
-        properties: {
-          did: {
-            type: 'string',
-            format: 'did',
-          },
-        },
-      },
-      link: {
-        type: 'object',
-        description: 'A facet feature for links.',
-        required: ['uri'],
-        properties: {
-          uri: {
-            type: 'string',
-            format: 'uri',
-          },
-        },
-      },
-      byteSlice: {
-        type: 'object',
-        description:
-          'A text segment. Start is inclusive, end is exclusive. Indices are for utf8-encoded strings.',
-        required: ['byteStart', 'byteEnd'],
-        properties: {
-          byteStart: {
-            type: 'integer',
-            minimum: 0,
-          },
-          byteEnd: {
-            type: 'integer',
-            minimum: 0,
-          },
-        },
-      },
-    },
-  },
-  AppBskyUnspeccedGetPopular: {
-    lexicon: 1,
-    id: 'app.bsky.unspecced.getPopular',
-    defs: {
-      main: {
-        type: 'query',
-        description: 'An unspecced view of globally popular items',
-        parameters: {
-          type: 'params',
-          properties: {
-            includeNsfw: {
-              type: 'boolean',
-              default: false,
-            },
-            limit: {
-              type: 'integer',
-              minimum: 1,
-              maximum: 100,
-              default: 50,
-            },
-            cursor: {
-              type: 'string',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['feed'],
-            properties: {
-              cursor: {
-                type: 'string',
-              },
-              feed: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:app.bsky.feed.defs#feedViewPost',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
 }
 export const schemas: LexiconDoc[] = Object.values(schemaDict) as LexiconDoc[]
 export const lexicons: Lexicons = new Lexicons(schemas)
 export const ids = {
+  AppBskyActorDefs: 'app.bsky.actor.defs',
+  AppBskyActorGetPreferences: 'app.bsky.actor.getPreferences',
+  AppBskyActorGetProfile: 'app.bsky.actor.getProfile',
+  AppBskyActorGetProfiles: 'app.bsky.actor.getProfiles',
+  AppBskyActorGetSuggestions: 'app.bsky.actor.getSuggestions',
+  AppBskyActorProfile: 'app.bsky.actor.profile',
+  AppBskyActorPutPreferences: 'app.bsky.actor.putPreferences',
+  AppBskyActorSearchActors: 'app.bsky.actor.searchActors',
+  AppBskyActorSearchActorsTypeahead: 'app.bsky.actor.searchActorsTypeahead',
+  AppBskyEmbedExternal: 'app.bsky.embed.external',
+  AppBskyEmbedImages: 'app.bsky.embed.images',
+  AppBskyEmbedRecord: 'app.bsky.embed.record',
+  AppBskyEmbedRecordWithMedia: 'app.bsky.embed.recordWithMedia',
+  AppBskyFeedDefs: 'app.bsky.feed.defs',
+  AppBskyFeedDescribeFeedGenerator: 'app.bsky.feed.describeFeedGenerator',
+  AppBskyFeedGenerator: 'app.bsky.feed.generator',
+  AppBskyFeedGetActorFeeds: 'app.bsky.feed.getActorFeeds',
+  AppBskyFeedGetAuthorFeed: 'app.bsky.feed.getAuthorFeed',
+  AppBskyFeedGetFeed: 'app.bsky.feed.getFeed',
+  AppBskyFeedGetFeedGenerator: 'app.bsky.feed.getFeedGenerator',
+  AppBskyFeedGetFeedGenerators: 'app.bsky.feed.getFeedGenerators',
+  AppBskyFeedGetFeedSkeleton: 'app.bsky.feed.getFeedSkeleton',
+  AppBskyFeedGetLikes: 'app.bsky.feed.getLikes',
+  AppBskyFeedGetPostThread: 'app.bsky.feed.getPostThread',
+  AppBskyFeedGetPosts: 'app.bsky.feed.getPosts',
+  AppBskyFeedGetRepostedBy: 'app.bsky.feed.getRepostedBy',
+  AppBskyFeedGetTimeline: 'app.bsky.feed.getTimeline',
+  AppBskyFeedLike: 'app.bsky.feed.like',
+  AppBskyFeedPost: 'app.bsky.feed.post',
+  AppBskyFeedRepost: 'app.bsky.feed.repost',
+  AppBskyGraphBlock: 'app.bsky.graph.block',
+  AppBskyGraphDefs: 'app.bsky.graph.defs',
+  AppBskyGraphFollow: 'app.bsky.graph.follow',
+  AppBskyGraphGetBlocks: 'app.bsky.graph.getBlocks',
+  AppBskyGraphGetFollowers: 'app.bsky.graph.getFollowers',
+  AppBskyGraphGetFollows: 'app.bsky.graph.getFollows',
+  AppBskyGraphGetList: 'app.bsky.graph.getList',
+  AppBskyGraphGetListMutes: 'app.bsky.graph.getListMutes',
+  AppBskyGraphGetLists: 'app.bsky.graph.getLists',
+  AppBskyGraphGetMutes: 'app.bsky.graph.getMutes',
+  AppBskyGraphList: 'app.bsky.graph.list',
+  AppBskyGraphListitem: 'app.bsky.graph.listitem',
+  AppBskyGraphMuteActor: 'app.bsky.graph.muteActor',
+  AppBskyGraphMuteActorList: 'app.bsky.graph.muteActorList',
+  AppBskyGraphUnmuteActor: 'app.bsky.graph.unmuteActor',
+  AppBskyGraphUnmuteActorList: 'app.bsky.graph.unmuteActorList',
+  AppBskyNotificationGetUnreadCount: 'app.bsky.notification.getUnreadCount',
+  AppBskyNotificationListNotifications:
+    'app.bsky.notification.listNotifications',
+  AppBskyNotificationUpdateSeen: 'app.bsky.notification.updateSeen',
+  AppBskyRichtextFacet: 'app.bsky.richtext.facet',
+  AppBskyUnspeccedGetPopular: 'app.bsky.unspecced.getPopular',
+  AppBskyUnspeccedGetPopularFeedGenerators:
+    'app.bsky.unspecced.getPopularFeedGenerators',
+  AppBskyUnspeccedGetTimelineSkeleton: 'app.bsky.unspecced.getTimelineSkeleton',
   ComAtprotoAdminDefs: 'com.atproto.admin.defs',
   ComAtprotoAdminDisableAccountInvites:
     'com.atproto.admin.disableAccountInvites',
@@ -6187,11 +6487,13 @@ export const ids = {
   ComAtprotoAdminGetModerationReports: 'com.atproto.admin.getModerationReports',
   ComAtprotoAdminGetRecord: 'com.atproto.admin.getRecord',
   ComAtprotoAdminGetRepo: 'com.atproto.admin.getRepo',
+  ComAtprotoAdminRebaseRepo: 'com.atproto.admin.rebaseRepo',
   ComAtprotoAdminResolveModerationReports:
     'com.atproto.admin.resolveModerationReports',
   ComAtprotoAdminReverseModerationAction:
     'com.atproto.admin.reverseModerationAction',
   ComAtprotoAdminSearchRepos: 'com.atproto.admin.searchRepos',
+  ComAtprotoAdminSendEmail: 'com.atproto.admin.sendEmail',
   ComAtprotoAdminTakeModerationAction: 'com.atproto.admin.takeModerationAction',
   ComAtprotoAdminUpdateAccountEmail: 'com.atproto.admin.updateAccountEmail',
   ComAtprotoAdminUpdateAccountHandle: 'com.atproto.admin.updateAccountHandle',
@@ -6244,58 +6546,4 @@ export const ids = {
   ComAtprotoSyncNotifyOfUpdate: 'com.atproto.sync.notifyOfUpdate',
   ComAtprotoSyncRequestCrawl: 'com.atproto.sync.requestCrawl',
   ComAtprotoSyncSubscribeRepos: 'com.atproto.sync.subscribeRepos',
-  AppBskyActorDefs: 'app.bsky.actor.defs',
-  AppBskyActorGetPreferences: 'app.bsky.actor.getPreferences',
-  AppBskyActorGetProfile: 'app.bsky.actor.getProfile',
-  AppBskyActorGetProfiles: 'app.bsky.actor.getProfiles',
-  AppBskyActorGetSuggestions: 'app.bsky.actor.getSuggestions',
-  AppBskyActorProfile: 'app.bsky.actor.profile',
-  AppBskyActorPutPreferences: 'app.bsky.actor.putPreferences',
-  AppBskyActorSearchActors: 'app.bsky.actor.searchActors',
-  AppBskyActorSearchActorsTypeahead: 'app.bsky.actor.searchActorsTypeahead',
-  AppBskyEmbedExternal: 'app.bsky.embed.external',
-  AppBskyEmbedImages: 'app.bsky.embed.images',
-  AppBskyEmbedRecord: 'app.bsky.embed.record',
-  AppBskyEmbedRecordWithMedia: 'app.bsky.embed.recordWithMedia',
-  AppBskyFeedDefs: 'app.bsky.feed.defs',
-  AppBskyFeedDescribeFeedGenerator: 'app.bsky.feed.describeFeedGenerator',
-  AppBskyFeedGenerator: 'app.bsky.feed.generator',
-  AppBskyFeedGetActorFeeds: 'app.bsky.feed.getActorFeeds',
-  AppBskyFeedGetAuthorFeed: 'app.bsky.feed.getAuthorFeed',
-  AppBskyFeedGetFeed: 'app.bsky.feed.getFeed',
-  AppBskyFeedGetFeedGenerator: 'app.bsky.feed.getFeedGenerator',
-  AppBskyFeedGetFeedSkeleton: 'app.bsky.feed.getFeedSkeleton',
-  AppBskyFeedGetLikes: 'app.bsky.feed.getLikes',
-  AppBskyFeedGetPostThread: 'app.bsky.feed.getPostThread',
-  AppBskyFeedGetPosts: 'app.bsky.feed.getPosts',
-  AppBskyFeedGetRepostedBy: 'app.bsky.feed.getRepostedBy',
-  AppBskyFeedGetSavedFeeds: 'app.bsky.feed.getSavedFeeds',
-  AppBskyFeedGetTimeline: 'app.bsky.feed.getTimeline',
-  AppBskyFeedLike: 'app.bsky.feed.like',
-  AppBskyFeedPost: 'app.bsky.feed.post',
-  AppBskyFeedRepost: 'app.bsky.feed.repost',
-  AppBskyFeedSaveFeed: 'app.bsky.feed.saveFeed',
-  AppBskyFeedUnsaveFeed: 'app.bsky.feed.unsaveFeed',
-  AppBskyGraphBlock: 'app.bsky.graph.block',
-  AppBskyGraphDefs: 'app.bsky.graph.defs',
-  AppBskyGraphFollow: 'app.bsky.graph.follow',
-  AppBskyGraphGetBlocks: 'app.bsky.graph.getBlocks',
-  AppBskyGraphGetFollowers: 'app.bsky.graph.getFollowers',
-  AppBskyGraphGetFollows: 'app.bsky.graph.getFollows',
-  AppBskyGraphGetList: 'app.bsky.graph.getList',
-  AppBskyGraphGetListMutes: 'app.bsky.graph.getListMutes',
-  AppBskyGraphGetLists: 'app.bsky.graph.getLists',
-  AppBskyGraphGetMutes: 'app.bsky.graph.getMutes',
-  AppBskyGraphList: 'app.bsky.graph.list',
-  AppBskyGraphListitem: 'app.bsky.graph.listitem',
-  AppBskyGraphMuteActor: 'app.bsky.graph.muteActor',
-  AppBskyGraphMuteActorList: 'app.bsky.graph.muteActorList',
-  AppBskyGraphUnmuteActor: 'app.bsky.graph.unmuteActor',
-  AppBskyGraphUnmuteActorList: 'app.bsky.graph.unmuteActorList',
-  AppBskyNotificationGetUnreadCount: 'app.bsky.notification.getUnreadCount',
-  AppBskyNotificationListNotifications:
-    'app.bsky.notification.listNotifications',
-  AppBskyNotificationUpdateSeen: 'app.bsky.notification.updateSeen',
-  AppBskyRichtextFacet: 'app.bsky.richtext.facet',
-  AppBskyUnspeccedGetPopular: 'app.bsky.unspecced.getPopular',
 }

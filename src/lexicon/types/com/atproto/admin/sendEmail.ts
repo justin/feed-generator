@@ -11,7 +11,14 @@ import { HandlerAuth } from '@atproto/xrpc-server'
 export interface QueryParams {}
 
 export interface InputSchema {
-  feed: string
+  recipientDid: string
+  content: string
+  subject?: string
+  [k: string]: unknown
+}
+
+export interface OutputSchema {
+  sent: boolean
   [k: string]: unknown
 }
 
@@ -20,12 +27,18 @@ export interface HandlerInput {
   body: InputSchema
 }
 
+export interface HandlerSuccess {
+  encoding: 'application/json'
+  body: OutputSchema
+  headers?: { [key: string]: string }
+}
+
 export interface HandlerError {
   status: number
   message?: string
 }
 
-export type HandlerOutput = HandlerError | void
+export type HandlerOutput = HandlerError | HandlerSuccess
 export type Handler<HA extends HandlerAuth = never> = (ctx: {
   auth: HA
   params: QueryParams
